@@ -1,0 +1,18 @@
+export const devNameArray: string[] = [
+	"M",
+	"A",
+	"S",
+	"T",
+	"E",
+	"R",
+	"P",
+	"I",
+	"E",
+	"C",
+	"E",
+	"-",
+	"K",
+	"O",
+	"D",
+	"Z",
+];

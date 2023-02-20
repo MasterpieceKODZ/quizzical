@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import "@fontsource/julee";
@@ -6,6 +5,11 @@ import "@fontsource/stylish";
 import "@fontsource/new-rocker";
 import "@fontsource/special-elite";
 import "@fontsource/wallpoet";
+import "@/styles/globals.css";
+import "@/styles/launch-screen.css";
+import "@/styles/launch-screen-media-queries.css";
+import { Provider } from "react-redux";
+import reduxStore from "@/redux/reduxStore";
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
@@ -22,7 +26,9 @@ export default function App({ Component, pageProps }: AppProps) {
 					type="image/x-icon"
 				/>
 			</Head>
-			<Component {...pageProps} />
+			<Provider store={reduxStore}>
+				<Component {...pageProps} />
+			</Provider>
 		</>
 	);
 }
