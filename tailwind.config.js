@@ -8,6 +8,7 @@ module.exports = {
 			screens: {
 				mobileM: "320px",
 				mobileL: "360px",
+				mobileXL: "400px",
 				tabS: "424px",
 				tabM: "525px",
 				tabL: "625px",
