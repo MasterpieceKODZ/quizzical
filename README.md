@@ -7,3 +7,4 @@ In this project I hav used...
 - Next.JS
 - Tailwind CSS
 - PostCSS
+- Redux
