@@ -6,6 +6,10 @@ export function generalReducer(
 	switch (type) {
 		case "UPDATE_DEVELOPER_NAME":
 			return { ...state, devName: payload };
+		case "UPDATE_WELCOME_TEXT":
+			return { ...state, welcomeText: payload };
+		case "UPDATE_CHALLENGE_TEXT":
+			return { ...state, challengeText: payload };
 		default:
 			return state;
 	}

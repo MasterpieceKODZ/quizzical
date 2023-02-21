@@ -16,6 +16,7 @@ module.exports = {
 				laptopM: "1024px",
 				laptopL: "1400px",
 				tv: "2500px",
+				tallXS: { raw: "(min-height: 500px)" },
 				tallS: { raw: "(min-height: 600px)" },
 				tall: { raw: "(min-height: 700px)" },
 				tallL: { raw: "(min-height: 750px)" },
