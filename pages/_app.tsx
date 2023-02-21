@@ -8,6 +8,7 @@ import "@fontsource/wallpoet";
 import "@/styles/globals.css";
 import "@/styles/launch-screen.css";
 import "@/styles/launch-screen-media-queries.css";
+import "@/styles/welcome.css";
 import { Provider } from "react-redux";
 import reduxStore from "@/redux/reduxStore";
 
