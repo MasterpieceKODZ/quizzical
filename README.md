@@ -6,8 +6,11 @@ In this project I hav used...
 
 - Next.JS
 - Tailwind CSS
+- vercel fonts
+- vercel Hosting
 - PostCSS
 - Redux
+- Firebase
 
 ### Refrence
 
