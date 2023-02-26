@@ -1,15 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { actionUpdateWelcomeText } from "@/redux/actionCreators";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Image from "next/image";
 import { useEffect } from "react";
 import { getChallengeText } from "../challenge";
 import { actionUpdateChallengeText } from "../redux/actionCreators";
+//import { appAuth } from "../firebase.config";
+import { useRouter } from "next/router";
+import { appAuth } from "@/firebase.config";
 
 const Welcome = () => {
 	const welcomeText = useAppSelector((state) => state.appState.welcomeText);
 	const challengeText = useAppSelector((state) => state.appState.challengeText);
 	const dispatch: any = useAppDispatch();
+	const router = useRouter();
 
 	useEffect(() => {
 		const brandImg = document.getElementById("img-app-name");
@@ -28,7 +31,7 @@ const Welcome = () => {
 			}, index * 170);
 		});
 
-		// show app name
+		// show app name, drop down animation
 		setTimeout(() => {
 			brandImg?.classList.add("app-brand-img");
 
@@ -67,6 +70,17 @@ const Welcome = () => {
 		};
 	}, []);
 
+	const acceptChallenge = () => {
+		const user = appAuth.currentUser;
+
+		// if the user is signed in, navigate to quizroom else show login screen
+		if (user) {
+			router.push("/quizroom");
+		} else {
+			router.push("/login");
+		}
+	};
+
 	return (
 		<div className="w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh] p-1 overflow-hidden bg-blue-500 flex justify-center items-center flex-col">
 			<p
@@ -92,7 +106,8 @@ const Welcome = () => {
 			</div>
 			<button
 				id="btn-accept-challenge"
-				className="block px-5 py-[2px] mx-auto my-3 tallXS:mt-[28px] bg-secondary text-primary text-[18px] font-bold font-stylish border-primary border-2 rounded-lg invisible">
+				className="block px-5 py-[2px] mx-auto my-3 tallXS:mt-[28px] bg-secondary text-primary text-[18px] font-bold font-stylish border-primary border-2 rounded-lg invisible"
+				onClick={acceptChallenge}>
 				ACCEPT CHALLENGE
 			</button>
 		</div>
@@ -100,9 +115,3 @@ const Welcome = () => {
 };
 
 export default Welcome;
-
-export async function getStaticProps() {
-	return {
-		props: { name: "max" },
-	};
-}

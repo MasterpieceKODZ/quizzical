@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import Image from "next/image";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { actionUpdateDeveloperName } from "@/redux/actionCreators";
@@ -14,8 +13,6 @@ export default function Home() {
 	useEffect(() => {
 		const modal = document.getElementById("welcome-screen-modal");
 		const devLogo = document.getElementById("developer-logo");
-
-		console.log("webpage loaded");
 
 		// animate developer logo
 		setTimeout(() => {
@@ -76,10 +73,4 @@ export default function Home() {
 			</div>
 		</div>
 	);
-}
-
-export async function getStaticProps() {
-	return {
-		props: { name: "max" },
-	};
 }
