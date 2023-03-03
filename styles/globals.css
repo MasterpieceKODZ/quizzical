@@ -8,3 +8,7 @@
 		box-sizing: border-box;
 	}
 }
+
+.spinner-modal {
+	background-color: rgba(93, 103, 112, 0.774);
+}
