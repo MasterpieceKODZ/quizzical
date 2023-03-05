@@ -1,10 +1,29 @@
 import BallSpinnerModal from "@/components/BallSpinners";
+import { appAuth } from "@/firebase.config";
+import { handelForgotPassword } from "@/myFunctions/forgoPassword";
 import initiateLoginProcess from "@/myFunctions/startLogin";
 import { validatePasswordOnChange } from "@/myFunctions/validatePassword";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 /* eslint-disable @next/next/no-img-element */
 const Login = () => {
+	const router = useRouter();
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
+			console.log(user);
+			if (user) {
+				//router.push("/quizroom");
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
 	return (
 		<div className="login-root min-h-[100vh] overflow-y-auto relative bg-slate-200">
 			<div className="flex items-center justify-center py-3">
@@ -83,9 +102,11 @@ const Login = () => {
 							</p>
 						</div>
 						<p
-							id="password-error-login"
-							className="mt-2 text-red-600 text-[12px] w-[80vw] hidden">
-							incorrect password you have four more attempts
+							className=" w-max mt-1 text-sm text-accent hover:text-red-600 cursor-pointer"
+							onClick={(e) => {
+								handelForgotPassword();
+							}}>
+							Forgot Password?
 						</p>
 					</div>
 
@@ -94,7 +115,9 @@ const Login = () => {
 						className="px-8 py-[2px] mt-8 rounded-lg bg-primary ring-2 ring-secondary text-white text-[18px]">
 						Login
 					</button>
-					<p className="w-[80%] text-center text-red-600 bg-red-200 p-2 mt-5 rounded-md ring-1 ring-red-400 hidden">
+					<p
+						id="login-error-console"
+						className="w-[80%] text-center text-red-600 text-[12px] bg-red-200 p-2 mt-5 rounded-md ring-1 ring-red-400 hidden">
 						There was an error while processing your data please check your
 						network and try again.
 					</p>
@@ -108,6 +131,13 @@ const Login = () => {
 					Sign Up
 				</Link>
 			</p>
+			<button
+				className="absolute top-2 left-1"
+				onClick={(e) => {
+					signOut(appAuth);
+				}}>
+				SIGN OUT
+			</button>
 			<BallSpinnerModal />
 		</div>
 	);

@@ -1,4 +1,4 @@
-
+import { hideLoadingSpinner } from "./showHideSpinner";
 
 // validate email address on login
 export async function loginEmailValidation(email: string): Promise<object> {
@@ -13,8 +13,6 @@ export async function loginEmailValidation(email: string): Promise<object> {
 				return res.json();
 			})
 			.then((resultData) => {
-				console.log(resultData);
-
 				// if email is valid and is not a catch all email return VALID
 				if (
 					resultData.deliverability == "DELIVERABLE" &&
@@ -54,7 +52,13 @@ export async function loginEmailValidation(email: string): Promise<object> {
 				}
 			})
 			.catch((err) => {
-				console.log("there was an error...", err);
+				const errorConsole: any = document.getElementById(
+					"login-error-console",
+				);
+				hideLoadingSpinner();
+				errorConsole.classList.remove("hidden");
+				errorConsole.textContent =
+					"There was an error while validating email please check your network and try again";
 			});
 	});
 }

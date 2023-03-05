@@ -27,16 +27,25 @@ export async function validatePasswordOnChange(e: any) {
 	if (letterTest) {
 		letterCheckBad?.classList.add("hidden");
 		letterCheckOk?.classList.remove("hidden");
+	} else {
+		letterCheckBad?.classList.remove("hidden");
+		letterCheckOk?.classList.add("hidden");
 	}
 
 	if (numTest) {
 		numCheckBad?.classList.add("hidden");
 		numCheckOk?.classList.remove("hidden");
+	} else {
+		numCheckBad?.classList.remove("hidden");
+		numCheckOk?.classList.add("hidden");
 	}
 
 	if (nonAlphaNumTest) {
 		nonAlphanumCheckBad?.classList.add("hidden");
 		nonAlphanumCheckOk?.classList.remove("hidden");
+	} else {
+		nonAlphanumCheckBad?.classList.remove("hidden");
+		nonAlphanumCheckOk?.classList.add("hidden");
 	}
 
 	if (!inputValue) {
