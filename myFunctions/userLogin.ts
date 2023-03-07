@@ -9,8 +9,6 @@ export default async function loginUserAccount(
 	signInWithEmailAndPassword(appAuth, email, password)
 		.then((credential) => {})
 		.catch((err: Error) => {
-			console.log(err);
-
 			if (err.message == "Firebase: Error (auth/user-not-found).") {
 				showInfoLogin("account does not exist, check email and try again");
 

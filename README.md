@@ -16,30 +16,81 @@ In this project I hav used...
 
 ### Refrence
 
-#### **getChallengeText** _params :_ (none), _returns_ : string
+#### **getChallengeText** _params_ : (none), _return_ : string.
 
-This function is located in the challenge.ts file in the root directory, and it gets a random number from 0 to 3 and selects one of the four challenge texts in the file based on the number generated which is then written in the challenge console.
+This function is located in the challenge.ts file in the root directory, and it generates a random number from 0 to 3 and selects one of the four challenge texts in the file based on the number generated which is then written in the challenge console on the welcome page.
 
-#### **initiateLoginProcess** _params :_ (none), _returns_ : void
+#### **initiateLoginProcess** _params_ : (none), _return_ : void.
 
-This function is called when the user submits the login form, it validates the email address by sending a get request to the abstract-API email validation API and then it validates the password using regular expressions
-if the email and password are valid the user would be allowed to login else an error message will be shown to the user
+This function is called when the user submits the login form, it validates the email address by sending a get request to Abstract-API email validation API, and then it validates the password using regular expressions
+if the email and password are valid the user would be allowed to login else an error message will be shown to the user, describing possible cause of the error.
 
-#### **loginEmailValidation** _params :_ (email : string), _returns_ : Promise<object>
+#### **validateEmailInputed** _params_ : (email : string), _return_ : Promise<object>.
 
-This function makes a get request to the abstract-API email validation API it is and if email is valid it returns an object with an emailState prop and an optional autocorrect property which hold a suggested email if the email entered by the user is suspected to have a typo error
-_possible email state values are:_
+This function makes a get request to Abstract-API email validation API, if email is valid it returns an object with an emailState prop and an optional autocorrect property which holds a suggested email if the email entered by the user is suspected to have a typo error.
+_possible values of emailState property of the object retured are:_
 
     ***VALID*** - email is valid
     ***CATCH_ALL*** - email is a catch all email address (not permitted)
     ***ROLE*** - email is a role email address (not permitted)
-    ***TYPO*** - email has a typo error (not permitted), in this case the returned promise object would have two props emailState and autocorrect
+    ***TYPO*** - email has a typo error (not permitted), in this case the returned promise object would have two props. emailState and autocorrect
     ***INVALID*** - email is invalid
 
-#### **validatePasswordOnChange** _params :_ (none), _returns_ : none
+#### **getEmailValidationResponse** _params_ : (email : string), _return_ : Promise<boolean>.
 
-while the user types in their password this function reviews the value entered and notify the user of the password requirments state, this function uses regular expressions to check password requirements
+This function is used to get the result of email validation on any email input page (login or signup), it returns a boolean promise that denotes the validity of the email provided by the user.
 
-#### **validatePasswordOnSubmit** _params :_ (none), _returns_ : boolean
+#### **validatePasswordOnChange** _params_ : (e: any, action: string), _return_ : none.
 
-before the form is submitted to complete login this function is called to verify password requirement
+while the user types in their password this function reviews the value entered and notifies the user of the password requirments state, this function uses regular expressions to check password requirements.
+**Params:**
+_e : any_ -> an event object from the onChange listener of the email input.
+_action : string_ -> an identification of the page where the function is being called from, to help select the right password requirements elements, possible values are:
+_reset_ - function was called from the password reset page.
+_login_ - function was called from the login page.
+_signup_ - function was called from the signup page
+
+this helps to reduce boilerplate code during password validation on diffrent password input pages.
+
+#### **validatePasswordOnSubmit** _params_ : (action: string), _return_ : boolean.
+
+when the login form is submitted this function is called to verify password requirement before completing login,
+the action params identifies the page where the function was called.
+
+#### **showLoginInfo** _params_ : (info: string), _return_ : void.
+
+this function is used to show a message to the user on the login screen
+
+#### **hideLoginInfo** _params_ : (none), _return_ : void.
+
+this function hides the login page message console shown by _showLoginInfo_.
+
+#### **showLoadingSpinner** _params_ : (none), _return_ : void.
+
+this function shows the apps default loading spinner.
+
+#### **hideLoadingSpinner** _params_ : (none), _return_ : void.
+
+this function hides the apps default loading spinner.
+
+#### **initiateLoginProcess** _params_ : (none), _return_ : void
+
+this function is called when the login button on the login page is clicked, it is the starting point of the login process.
+
+#### **loginUserAccount** _params_ : (email: string, password: string), _return_ : void
+
+this function runs the firebase login auth code, it takes in the provided email and password after validation.
+
+#### **handelForgotPassword** _params_ : (none), _return_ : void
+
+this is the callback function of the login page forgot password button click event, it also checks for email validity, if email is valid, it sends a password reset email to the user provided email address, if not the user will be notified of any problem with their email address or the validation process.
+
+#### **resetUserPassword** _params_ : (actionCode: string,email: string,router: NextRouter,setRetryPasswordReset: any)
+
+this function is called when the confirm button on the password reset page is clicked , the _actionCode_ parameter is passed down to the function from the reset password page component, it is a temporary code generated by firebase to verify the password reset action, it is added as a URL parameter in the URL embeded in the password reset email with the name _oobCode_.
+
+If the _actionCode_ is still valid (it expires after a short while), then the password reset would be confirmed.
+
+if password is successfully resetted the use is signed in immediately and sent to the quizrooom using the provided _router_ argument.
+
+the _setRetryPasswordReset_ function argument is used to update the _retryReset_ state of the reset password page, and if the _retryReset_ state is true a retry button is shown and all other UI elements are hidden, the retry button navigates the user back to the login page, so they can start the **forgot password** process all over again.

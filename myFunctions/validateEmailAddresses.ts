@@ -1,7 +1,8 @@
+import { hideInfoLogin, showInfoLogin } from "./showHideLoginInfo";
 import { hideLoadingSpinner } from "./showHideSpinner";
 
 // validate email address on login
-export async function loginEmailValidation(email: string): Promise<object> {
+export async function validateEmailInputed(email: string): Promise<object> {
 	let isValid: string;
 
 	return new Promise(async (resolve, reject) => {
@@ -52,13 +53,58 @@ export async function loginEmailValidation(email: string): Promise<object> {
 				}
 			})
 			.catch((err) => {
-				const errorConsole: any = document.getElementById(
-					"login-error-console",
-				);
 				hideLoadingSpinner();
-				errorConsole.classList.remove("hidden");
-				errorConsole.textContent =
-					"There was an error while validating email please check your network and try again";
+				// show error console
+				showInfoLogin(
+					"there was an error while validating email check your network and try again",
+				);
+				setTimeout(() => {
+					hideInfoLogin();
+				}, 5000);
 			});
 	});
+}
+
+// returns a boolean promise showing the email validity
+export async function getEmailValidationResponse(email: string) {
+	const emailErrorTag: any = document.getElementById("email-error-login");
+
+	let emailIsValid = false;
+
+	// check the validity of the email provided by the user
+	await validateEmailInputed(email).then((res: any) => {
+		if (res.emailState == "VALID") {
+			emailIsValid = true;
+		} else if (res.emailState == "TYPO") {
+			hideLoadingSpinner();
+			emailErrorTag.textContent = `incorrect email, did you mean: ${res.autocorrect}`;
+			emailErrorTag.classList.remove("hidden");
+			emailIsValid = false;
+		} else if (res.emailState == "INVALID") {
+			hideLoadingSpinner();
+			emailErrorTag.textContent = `invalid email please enter a valid email address and try again`;
+			emailErrorTag.classList.remove("hidden");
+			emailIsValid = false;
+		} else if (res.emailState == "CATCH_ALL") {
+			hideLoadingSpinner();
+			emailErrorTag.textContent = `catch all emails are not valid use a different email address and try again.`;
+			emailErrorTag.classList.remove("hidden");
+			emailIsValid = false;
+		} else if (res.emailState == "ROLE") {
+			hideLoadingSpinner();
+			emailErrorTag.textContent = `role emails are not valid use a different email and try again.`;
+			emailErrorTag.classList.remove("hidden");
+			emailIsValid = false;
+		}
+	});
+
+	if (emailIsValid) {
+		return new Promise((resolve, reject) => {
+			resolve(true);
+		});
+	} else {
+		new Promise((resolve, reject) => {
+			resolve(false);
+		});
+	}
 }
