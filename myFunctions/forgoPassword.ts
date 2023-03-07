@@ -13,9 +13,9 @@ export async function handelForgotPassword() {
 		let emailIsValid: any = true;
 
 		// check email validity
-		await getEmailValidationResponse(emailValue).then((res) => {
-			emailIsValid = res;
-		});
+		// await getEmailValidationResponse(emailValue).then((res) => {
+		// 	emailIsValid = res;
+		// });
 
 		if (emailIsValid) {
 			// send password reset email
