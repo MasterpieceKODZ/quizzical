@@ -1,21 +1,25 @@
 // review password while user is typing
-export async function validatePasswordOnChange(e: any) {
-	const passwordCheckCont = document.getElementById("password-check");
-	const letterCheckOk = document.querySelector(".pw-letter-check-ok");
-	const letterCheckBad = document.querySelector(".pw-letter-check-bad");
-	const numCheckOk = document.querySelector(".pw-num-check-ok");
-	const numCheckBad = document.querySelector(".pw-num-check-bad");
+export async function validatePasswordOnChange(e: any, action: string) {
+	const passwordCheckCont = document.getElementById(`password-check-${action}`);
+	const letterCheckOk = document.querySelector(`.pw-letter-check-ok-${action}`);
+	const letterCheckBad = document.querySelector(
+		`.pw-letter-check-bad-${action}`,
+	);
+	const numCheckOk = document.querySelector(`.pw-num-check-ok-${action}`);
+	const numCheckBad = document.querySelector(`.pw-num-check-bad-${action}`);
 	const nonAlphanumCheckOk = document.querySelector(
-		".pw-non-alphanum-check-ok",
+		`.pw-non-alphanum-check-ok-${action}`,
 	);
 	const nonAlphanumCheckBad = document.querySelector(
-		".pw-non-alphanum-check-bad",
+		`.pw-non-alphanum-check-bad-${action}`,
 	);
 	passwordCheckCont?.classList.remove("hidden");
 	letterCheckBad?.classList.remove("hidden");
 	numCheckBad?.classList.remove("hidden");
 	nonAlphanumCheckBad?.classList.remove("hidden");
 	const inputValue: string = e.target.value.trim();
+
+	// test password value with these regular expressions
 	const letterRegex = new RegExp("[a-z]{6,}", "gi");
 	const numRegex = new RegExp("[0-9]+", "gi");
 	const nonAlphaNumRegex = new RegExp(/\W/, "gi");
@@ -59,8 +63,8 @@ export async function validatePasswordOnChange(e: any) {
 }
 
 // validate password before submitting login form
-export function validatePasswordOnSubmit() {
-	const passwordInput: any = document.getElementById("inp-password-login");
+export function validatePasswordOnSubmit(action: string) {
+	const passwordInput: any = document.getElementById(`inp-password-${action}`);
 	const passwordValue = passwordInput.value.trim();
 
 	const letterRegex = new RegExp("[a-z]{6,}", "gi");

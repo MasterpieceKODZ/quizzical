@@ -63,7 +63,7 @@ const Login = () => {
 					</div>
 					<div className=" w-max mt-6">
 						<label
-							htmlFor="inp-password-login"
+							htmlFor="#inp-password-login"
 							className="block text-[17px]">
 							Password
 						</label>
@@ -74,30 +74,30 @@ const Login = () => {
 							className=" block border-2 w-[80vw] rounded-lg ring-1 ring-slate-600  outline-accent"
 							autoComplete="current-password"
 							onChange={(e) => {
-								validatePasswordOnChange(e);
+								validatePasswordOnChange(e, "login");
 							}}
 							required
 						/>
 						<div
-							id="password-check"
+							id="password-check-login"
 							className="text-[12px] hidden">
 							<p>at least...</p>
-							<p className="pw-letter-check-ok text-green-500 hidden">
+							<p className="pw-letter-check-ok-login text-green-500 hidden">
 								6 letters. <i className="fas fa-check"></i>
 							</p>
-							<p className="pw-letter-check-bad text-red-500 hidden">
+							<p className="pw-letter-check-bad-login text-red-500 hidden">
 								6 letters. <i className="fas fa-xmark"></i>
 							</p>
-							<p className="pw-num-check-ok text-green-500 hidden">
+							<p className="pw-num-check-ok-login text-green-500 hidden">
 								1 number. <i className="fas fa-check"></i>
 							</p>
-							<p className="pw-num-check-bad text-red-500 hidden">
+							<p className="pw-num-check-bad-login text-red-500 hidden">
 								1 number. <i className="fas fa-xmark"></i>
 							</p>
-							<p className="pw-non-alphanum-check-ok text-green-500 hidden">
+							<p className="pw-non-alphanum-check-ok-login text-green-500 hidden">
 								1 non-alphanumeric character. <i className="fas fa-check"></i>
 							</p>
-							<p className="pw-non-alphanum-check-bad text-red-500 hidden">
+							<p className="pw-non-alphanum-check-bad-login text-red-500 hidden">
 								1 non-alphanumeric character. <i className="fas fa-xmark"></i>
 							</p>
 						</div>
