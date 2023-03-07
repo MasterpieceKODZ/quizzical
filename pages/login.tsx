@@ -30,48 +30,48 @@ const Login = () => {
 				<img
 					src="/brand.png"
 					alt="brand quizzical"
-					className="img-login-brand w-[30%] h-auto object-cover"
+					className="img-login-brand w-[30%] max-w-[215px] min-w-[130px] h-auto object-cover"
 				/>
 			</div>
-			<div className="login-form-root">
+			<div className="login-form-root w-full max-w-[400px] mx-auto">
 				<form
-					className="flex flex-col items-center"
+					className="flex flex-col items-center w-full"
 					onSubmit={(e) => {
 						e.preventDefault();
 						initiateLoginProcess();
 					}}>
-					<div className=" w-max mt-4">
+					<div className=" w-full mt-4">
 						<label
 							htmlFor="#inp-email-login"
-							className="block text-[17px] ">
+							className="w-[80%] block text-[17px] mx-auto">
 							Email
 						</label>
 						<input
 							type="email"
 							name="loginemail"
 							id="inp-email-login"
-							className=" block border-2 w-[80vw] rounded-lg ring-1 ring-slate-600 outline-accent"
+							className=" block mx-auto border-2 w-[80%] rounded-lg ring-1 ring-slate-600 outline-accent"
 							autoComplete="email"
 							required
 						/>
 						<p
 							id="email-error-login"
-							className="mt-2 text-red-600 text-[12px] w-[80vw] hidden">
+							className="mt-2 text-red-600 text-[12px] w-[80%] hidden mx-auto">
 							this email address is not valid please enter a valid address and
 							try again
 						</p>
 					</div>
-					<div className=" w-max mt-6">
+					<div className=" w-full mt-6">
 						<label
 							htmlFor="#inp-password-login"
-							className="block text-[17px]">
+							className="w-[80%] block text-[17px] mx-auto">
 							Password
 						</label>
 						<input
 							type="password"
 							name="loginpassword"
 							id="inp-password-login"
-							className=" block border-2 w-[80vw] rounded-lg ring-1 ring-slate-600  outline-accent"
+							className=" block mx-auto border-2 w-[80%] rounded-lg ring-1 ring-slate-600  outline-accent"
 							autoComplete="current-password"
 							onChange={(e) => {
 								validatePasswordOnChange(e, "login");
@@ -80,7 +80,7 @@ const Login = () => {
 						/>
 						<div
 							id="password-check-login"
-							className="text-[12px] hidden">
+							className="text-[12px] hidden w-[80%] mx-auto">
 							<p>at least...</p>
 							<p className="pw-letter-check-ok-login text-green-500 hidden">
 								6 letters. <i className="fas fa-check"></i>
@@ -102,7 +102,7 @@ const Login = () => {
 							</p>
 						</div>
 						<p
-							className=" w-max mt-1 text-sm text-accent hover:text-red-600 cursor-pointer"
+							className="w-max mt-1 ml-[10%] text-sm text-accent hover:text-red-600 cursor-pointer"
 							onClick={(e) => {
 								handelForgotPassword();
 							}}>
@@ -131,13 +131,6 @@ const Login = () => {
 					Sign Up
 				</Link>
 			</p>
-			<button
-				className="absolute top-2 left-1"
-				onClick={(e) => {
-					signOut(appAuth);
-				}}>
-				SIGN OUT
-			</button>
 			<BallSpinnerModal />
 		</div>
 	);
