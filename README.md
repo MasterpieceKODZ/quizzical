@@ -25,11 +25,11 @@ This function is located in the challenge.ts file in the root directory, and it 
 This function is called when the user submits the login form, it validates the email address by sending a get request to Abstract-API email validation API, and then it validates the password using regular expressions
 if the email and password are valid the user would be allowed to login else an error message will be shown to the user, describing possible cause of the error.
 
-#### **validateEmailInputed(email : string)** : Promise<object>.
+#### **validateEmailInputed(email : string)** : Promise[object].
 
 This function makes a get request to Abstract-API email validation API, if email is valid it returns an object with an emailState prop and an optional autocorrect property which holds a suggested email if the email entered by the user is suspected to have a typo error.
 
-_possible values of emailState property of the object retured are:_
+possible values of emailState property of the object returned are:
 
 **_VALID_** - email is valid
 
@@ -41,7 +41,7 @@ _possible values of emailState property of the object retured are:_
 
 **_INVALID_** - email is invalid
 
-#### **getEmailValidationResponse(email : string)** : Promise<boolean>.
+#### **getEmailValidationResponse(email : string)** : Promise[boolean].
 
 This function is used to get the result of email validation on any email input page (login or signup), it returns a boolean promise that denotes the validity of the email provided by the user.
 
