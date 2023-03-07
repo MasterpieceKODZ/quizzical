@@ -28,13 +28,18 @@ if the email and password are valid the user would be allowed to login else an e
 #### **validateEmailInputed(email : string)** : Promise<object>.
 
 This function makes a get request to Abstract-API email validation API, if email is valid it returns an object with an emailState prop and an optional autocorrect property which holds a suggested email if the email entered by the user is suspected to have a typo error.
+
 _possible values of emailState property of the object retured are:_
 
-    ***VALID*** - email is valid
-    ***CATCH_ALL*** - email is a catch all email address (not permitted)
-    ***ROLE*** - email is a role email address (not permitted)
-    ***TYPO*** - email has a typo error (not permitted), in this case the returned promise object would have two props. emailState and autocorrect
-    ***INVALID*** - email is invalid
+**_VALID_** - email is valid
+
+**_CATCH_ALL_** - email is a catch all email address (not permitted)
+
+**_ROLE_** - email is a role email address (not permitted)
+
+**_TYPO_** - email has a typo error (not permitted), in this case the returned promise object would have two props. emailState and autocorrect
+
+**_INVALID_** - email is invalid
 
 #### **getEmailValidationResponse(email : string)** : Promise<boolean>.
 
