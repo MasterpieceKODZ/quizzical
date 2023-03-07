@@ -19,14 +19,11 @@ const PasswordReset = () => {
 	useEffect(() => {
 		// show ball spinner
 		showLoadingSpinner();
-
 		// fetch oobCode from URL
 		const urlParams = new Proxy(new URLSearchParams(window.location.search), {
 			get: (searchParams: any, prop: any) => searchParams.get(prop),
 		});
-
 		const actionCode = urlParams.oobCode;
-
 		// if action code is valid show new password input else prompt user to restart process
 		if (actionCode) {
 			setActionCode(actionCode);
@@ -36,17 +33,21 @@ const PasswordReset = () => {
 					const newPasswordConsole = document.getElementById(
 						"new-password-console",
 					);
-
 					newPasswordConsole?.classList.remove("hidden");
 					hideLoadingSpinner();
 				})
 				.catch((err) => {
-					document.write("action code has expired go back and try again.");
+					hideLoadingSpinner();
+					alert("action code has expired go back and try again.");
+					setRetryReset(true);
 				});
 		} else {
-			document.write(
+			hideLoadingSpinner();
+			alert(
 				"an error occured, it could be your network, go back and try again.",
 			);
+
+			setRetryReset(true);
 		}
 	}, []);
 
@@ -54,7 +55,9 @@ const PasswordReset = () => {
 		<div className="relative flex items-center justify-center min-h-[100vh]">
 			<div
 				id="new-password-console"
-				className=" w-[90%] border-[1.5px] border-accent rounded-lg py-10 px-4 bg-slate-200 hidden">
+				className={`w-[90%] max-w-[400px] border-[1.5px] border-accent rounded-lg py-10 px-4 bg-slate-200 ${
+					retryReset ? "" : "hidden"
+				}`}>
 				<label
 					htmlFor="#inp-password-reset"
 					className={`block ${retryReset ? "hidden" : ""}`}>
