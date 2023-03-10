@@ -1,8 +1,11 @@
-import { hideInfoLogin, showInfoLogin } from "./showHideLoginInfo";
+import { hideFormInfo, showFormInfo } from "./showHideFormInfo";
 import { hideLoadingSpinner } from "./showHideSpinner";
 
 // validate email address on login
-export async function validateEmailInputed(email: string): Promise<object> {
+export async function validateEmailInputed(
+	email: string,
+	action: string,
+): Promise<object> {
 	let isValid: string;
 
 	return new Promise(async (resolve, reject) => {
@@ -55,24 +58,28 @@ export async function validateEmailInputed(email: string): Promise<object> {
 			.catch((err) => {
 				hideLoadingSpinner();
 				// show error console
-				showInfoLogin(
+				showFormInfo(
 					"there was an error while validating email check your network and try again",
+					action,
 				);
 				setTimeout(() => {
-					hideInfoLogin();
+					hideFormInfo(action);
 				}, 5000);
 			});
 	});
 }
 
 // returns a boolean promise showing the email validity
-export async function getEmailValidationResponse(email: string) {
-	const emailErrorTag: any = document.getElementById("email-error-login");
+export async function getEmailValidationResponse(
+	email: string,
+	action: string,
+) {
+	const emailErrorTag: any = document.getElementById(`email-error-${action}`);
 
 	let emailIsValid = false;
 
 	// check the validity of the email provided by the user
-	await validateEmailInputed(email).then((res: any) => {
+	await validateEmailInputed(email, action).then((res: any) => {
 		if (res.emailState == "VALID") {
 			emailIsValid = true;
 		} else if (res.emailState == "TYPO") {

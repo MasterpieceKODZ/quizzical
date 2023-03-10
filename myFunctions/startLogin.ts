@@ -1,36 +1,31 @@
-import { hideInfoLogin, showInfoLogin } from "./showHideLoginInfo";
+import { hideFormInfo, showFormInfo } from "./showHideFormInfo";
 import { hideLoadingSpinner, showLoadingSpinner } from "./showHideSpinner";
 import loginUserAccount from "./userLogin";
-import signUpNewUser from "./userSignUp";
-import {
-	getEmailValidationResponse,
-	validateEmailInputed,
-} from "./validateEmailAddresses";
 import { validatePasswordOnSubmit } from "./validatePassword";
+import { NextRouter } from "next/router";
 
-export default async function initiateLoginProcess() {
+export default async function initiateLoginProcess(router: NextRouter) {
 	showLoadingSpinner();
 
 	const emailInput: any = document.getElementById("inp-email-login");
 	const passwordInput: any = document.getElementById("inp-password-login");
-
-	const emailErrorTag: any = document.getElementById("email-error-login");
-	emailErrorTag.classList.add("hidden");
+	// set password input type back to password to prevent the form from remebering the input value if user submits the form while password is visible
+	passwordInput.type = "password";
 
 	const emailValue = emailInput.value.trim();
 
-	// validate email address
-	let emailIsValid: any;
-
-	await getEmailValidationResponse(emailValue).then((res) => {
-		emailIsValid = res;
-	});
-
 	const passwordIsValid = validatePasswordOnSubmit("login");
 
-	if (emailIsValid && passwordIsValid) {
-		//signUpNewUser(emailValue, passwordInput.value.trim());
-		loginUserAccount(emailValue, passwordInput.value.trim());
+	if (passwordIsValid) {
+		loginUserAccount(emailValue, passwordInput.value.trim(), router);
+	} else {
+		showFormInfo(
+			"Your password does not pass the minimum password requirements, change password and try again.",
+			"login",
+		);
+		setTimeout(() => {
+			hideFormInfo("login");
+		}, 6000);
 	}
 
 	hideLoadingSpinner();

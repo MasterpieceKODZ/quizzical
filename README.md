@@ -14,88 +14,107 @@ In this project I hav used...
 - Abstract API [email validation](https://app.abstractapi.com/api/)
 - RegExp
 
-### Refrence
+## Refrence
 
-#### **getChallengeText()** : string
+#### **challenge.ts/getChallengeText()** : string
 
-This function is located in the challenge.ts file in the root directory, and it generates a random number from 0 to 3 and selects one of the four challenge texts in the file based on the number generated which is then written in the challenge console on the welcome page.
+    This function is located in the challenge.ts file in the root directory, and it generates a random number from 0 to 3 and selects one of the four challenge texts in the file based on the number generated which is then written in the challenge console on the welcome page.
 
-#### **initiateLoginProcess()** : void.
+### myFunctions/
 
-This function is called when the user submits the login form, it validates the email address by sending a get request to Abstract-API email validation API, and then it validates the password using regular expressions
-if the email and password are valid the user would be allowed to login else an error message will be shown to the user, describing possible cause of the error.
+#### **startLogin.ts/initiateLoginProcess(router : NextRouter)** : void.
 
-#### **validateEmailInputed(email : string)** : Promise[object].
+    This function is called when the user submits the login form, It first reviews the password by the minimum password requirements, if the password passes the minimum password requirement then the sign-in authentication process is initiated by calling the _loginUserAccount_ function.
 
-This function makes a get request to Abstract-API email validation API, if email is valid it returns an object with an emailState prop and an optional autocorrect property which holds a suggested email if the email entered by the user is suspected to have a typo error.
+_params_
 
-possible values of emailState property of the object returned are:
+- router -> this is a NextRouter object which is passed down to _loginUserAccount_, it is used to navigate user to quizroom if sign-in is successful
 
-**_VALID_** - email is valid
+#### **loginUserAccount(email: string, password: string,router : NextRouter)** : void
 
-**_CATCH_ALL_** - email is a catch all email address (not permitted)
+this function runs the firebase login auth code, it takes in the provided email and password after validation.
+The router param is used to navigate user to quizroom upon successful sign-in
 
-**_ROLE_** - email is a role email address (not permitted)
+#### **validateEmailAddress.ts/validateEmailInputed(email : string,action : string)** : Promise[object].
 
-**_TYPO_** - email has a typo error (not permitted), in this case the returned promise object would have two props. emailState and autocorrect
+    This function makes a get request to Abstract-API email validation API, if email is valid it returns an object with emailState prop and an optional autocorrect property which holds a suggested email if the email entered by the user is suspected to have a typo error.
+    The action param is used to identify the page of the email input field, (login or signup)
 
-**_INVALID_** - email is invalid
+    possible values of emailState property of the object returned are:
 
-#### **getEmailValidationResponse(email : string)** : Promise[boolean].
+    **_VALID_** - email is valid
 
-This function is used to get the result of email validation on any email input page (login or signup), it returns a boolean promise that denotes the validity of the email provided by the user.
+    **_CATCH_ALL_** - email is a catch all email address (not permitted)
 
-#### **validatePasswordOnChange(e: any, action: string)** : none.
+    **_ROLE_** - email is a role email address (not permitted)
 
-while the user types in their password this function reviews the value entered and notifies the user of the password requirments state, this function uses regular expressions to check password requirements.
-**Params:**
-_e : any_ -> an event object from the onChange listener of the email input.
-_action : string_ -> an identification of the page where the function is being called from, to help select the right password requirements elements, possible values are:
-_reset_ - function was called from the password reset page.
-_login_ - function was called from the login page.
-_signup_ - function was called from the signup page
+    **_TYPO_** - email has a typo error (not permitted), in this case the returned promise object would have two props. emailState and autocorrect
+
+    **_INVALID_** - email is invalid
+
+#### **validateEmailAddress.ts/getEmailValidationResponse(email : string,action : string)** : Promise[boolean].
+
+    This function is used to get the result of email validation on any email input page (login or signup), it returns a boolean promise that denotes the validity of the email provided by the user.
+    The action param is used to identify the page of the email input field.
+
+#### **validatePassword.ts/validatePasswordOnChange(e: any, action: string)** : none.
+
+    while the user types in their password this function reviews the value entered and notifies the user of the password requirments state, this function uses regular expressions to check password requirements.
+
+    **Params:**
+
+- **e : any** -> an event object from the onChange listener of the email input.
+- **action : string** -> an identification of the page where the function is being called from, to help select the right password requirements elements, possible values are:
+
+        reset -> function was called from the password reset page.
+        login -> function was called from the login page.
+        signup -> function was called from the signup page
 
 this helps to reduce boilerplate code during password validation on diffrent password input pages.
 
-#### **validatePasswordOnSubmit(action: string)** : boolean.
+#### **validatePassword.ts/validatePasswordOnSubmit(action: string)** : boolean.
 
 when the login form is submitted this function is called to verify password requirement before completing login,
 the action params identifies the page where the function was called.
 
-#### **showLoginInfo (info: string)** : void.
+#### **showHideLoginInfo.ts/showLoginInfo (info: string,action : string)** : void.
 
-this function is used to show a message to the user on the login screen
+this function is used to show a message to the user, the action param is used to identify the page on which the info should be shown (signup or login)
 
-#### **hideLoginInfo()** : void.
+#### **showHideFormInfo.ts/hideLoginInfo(action : string)** : void.
 
-this function hides the login page message console shown by _showLoginInfo_.
+this function hides the info message console shown by _showLoginInfo_. the action param identifies the page on which the info console is located
 
-#### **showLoadingSpinner()** : void.
+#### **showHideSpinner.ts/showLoadingSpinner()** : void.
 
-this function shows the apps default loading spinner.
+this function shows the apps default loading spinner component.
 
-#### **hideLoadingSpinner()** : void.
+#### **showHideSpinner.ts/hideLoadingSpinner()** : void.
 
-this function hides the apps default loading spinner.
+this function hides the apps default loading spinner component.
 
-#### **initiateLoginProcess()** : void
+#### **forgotPassword.ts/handelForgotPassword()** : void
 
-this function is called when the login button on the login page is clicked, it is the starting point of the login process.
+this is the callback function of the login page forgot password button click event, it sends a password reset email to the user provided email address
 
-#### **loginUserAccount(email: string, password: string)** : void
+#### **resetPassword.ts/resetUserPassword(actionCode: string,email: string,router: NextRouter,setRetryPasswordReset: any)** : void
 
-this function runs the firebase login auth code, it takes in the provided email and password after validation.
-
-#### **handelForgotPassword()** : void
-
-this is the callback function of the login page forgot password button click event, it also checks for email validity, if email is valid, it sends a password reset email to the user provided email address, if not the user will be notified of any problem with their email address or the validation process.
-
-#### **resetUserPassword(actionCode: string,email: string,router: NextRouter,setRetryPasswordReset: any)** : void
-
-this function is called when the confirm button on the password reset page is clicked , the _actionCode_ parameter is passed down to the function from the reset password page component, it is a temporary code generated by firebase to verify the password reset action, it is added as a URL parameter in the URL embeded in the password reset email with the name _oobCode_.
+this function is called when the confirm button on the password reset page is clicked , the _actionCode_ parameter is passed down to the function from the reset password page, it is a temporary code generated by firebase to verify the password reset action, it is added as a URL parameter in the URL embeded in the password reset email with the name _oobCode_.
 
 If the _actionCode_ is still valid (it expires after a short while), then the password reset would be confirmed.
 
-if password is successfully resetted the use is signed in immediately and sent to the quizrooom using the provided _router_ argument.
+if password is successfully resetted the user is signed in immediately and sent to the quizrooom using the provided _router_ argument.
 
 the _setRetryPasswordReset_ function argument is used to update the _retryReset_ state of the reset password page, and if the _retryReset_ state is true a retry button is shown and all other UI elements are hidden, the retry button navigates the user back to the login page, so they can start the **forgot password** process all over again.
+
+#### **passwordFocus.ts/passwordIsFocused(e: any)** : void
+
+This function is the callback function of the password input focus event listener, it replicates the behaviour of a text input by creating an outline on the parent div element when the input element receives focus
+
+#### **passwordFocus.ts/passwordIsBlur(e: any)** : void
+
+This function is the callback function of the password input blur event listener, it is a direct opposite of the _passwordIsFocused_ function
+
+#### **passwordFocus.ts/showHidePassword(e: any)** : void
+
+This is the click event callback function of the secondary password toggle button, it shows the password value by changing the input type from password to text when password is invisible, and it reverses the process when password is visible

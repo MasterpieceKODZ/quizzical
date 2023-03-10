@@ -1,5 +1,12 @@
+import { hideFormInfo } from "./showHideFormInfo";
+
 // review password while user is typing
 export async function validatePasswordOnChange(e: any, action: string) {
+	// exempt the password reset page because it has no info console
+	if (action != "reset") {
+		hideFormInfo(action);
+	}
+
 	const passwordCheckCont = document.getElementById(`password-check-${action}`);
 	const letterCheckOk = document.querySelector(`.pw-letter-check-ok-${action}`);
 	const letterCheckBad = document.querySelector(
