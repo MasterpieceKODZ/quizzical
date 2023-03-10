@@ -6,6 +6,7 @@ import { validatePasswordOnSubmit } from "./validatePassword";
 import { appAuth } from "@/firebase.config";
 import { hideLoadingSpinner, showLoadingSpinner } from "./showHideSpinner";
 import { NextRouter } from "next/router";
+// ****************************************************
 export async function resetUserPassword(
 	actionCode: string,
 	email: string,
@@ -13,6 +14,8 @@ export async function resetUserPassword(
 	setRetryPasswordReset: any,
 ) {
 	const newPassword: any = document.getElementById("inp-password-reset");
+	// set password input type back to password to prevent the form from remebering the input value if user submits the form while password is visible
+	newPassword.type = "password";
 
 	const newPwdVal = newPassword.value;
 
@@ -45,6 +48,11 @@ export async function resetUserPassword(
 					setRetryPasswordReset(true);
 					hideLoadingSpinner();
 				});
+		} else {
+			alert(
+				"Your password does not pass the minimum password requirements, change password and try again",
+			);
+			hideLoadingSpinner();
 		}
 	} else {
 		alert("enter a valid password..");

@@ -1,5 +1,10 @@
 import BallSpinnerModal from "@/components/BallSpinners";
 import { appAuth } from "@/firebase.config";
+import {
+	passwordIsBlur,
+	passwordIsFocused,
+	showHidePassword,
+} from "@/myFunctions/passwordFocus";
 import { resetUserPassword } from "@/myFunctions/resetPassword";
 import {
 	hideLoadingSpinner,
@@ -15,6 +20,7 @@ const PasswordReset = () => {
 	const [pwResetActionCode, setActionCode] = useState("");
 	const [accountEmail, setAccountEmail] = useState("");
 	const [retryReset, setRetryReset] = useState(false);
+	const [continueURLState, setContinueURLState] = useState("");
 	const router = useRouter();
 	useEffect(() => {
 		// show ball spinner
@@ -25,9 +31,10 @@ const PasswordReset = () => {
 		});
 		const actionCode = urlParams.oobCode;
 		const actionType = urlParams.mode;
+		const contURl = urlParams.continueUrl;
 
 		const emailActionConsole = document.getElementById("email-action-console");
-		emailActionConsole?.classList.remove("hidden")
+		emailActionConsole?.classList.remove("hidden");
 		//handel email action by type
 		switch (actionType) {
 			case "resetPassword":
@@ -37,6 +44,7 @@ const PasswordReset = () => {
 					// if password reset code is still valid show new password input console
 					verifyPasswordResetCode(appAuth, actionCode)
 						.then((email) => {
+							// update account email state
 							setAccountEmail(email);
 							const newPasswordConsole = document.getElementById(
 								"new-password-console",
@@ -59,29 +67,24 @@ const PasswordReset = () => {
 				}
 				break;
 			case "verifyEmail":
+				// update continue URL
+				setContinueURLState(contURl);
 				//confirm email verification
 				applyActionCode(appAuth, actionCode)
 					.then((res) => {
 						hideLoadingSpinner();
-						const verifyEmailConsole = document.getElementById(
+						const verifyEmailInfo = document.getElementById(
 							"verify-email-console",
 						);
-						verifyEmailConsole?.classList.remove("hidden");
-						verifyEmailConsole?.classList.add("flex");
+						verifyEmailInfo?.classList.remove("hidden");
+						verifyEmailInfo?.classList.add("flex");
 					})
 					.catch((err) => {
-						const verifyEmailInfo : any = document.getElementById(
+						const verifyEmailInfo: any = document.getElementById(
 							"verify-email-console",
 						);
-
-						const verifyEmailContinueBtn: any = document.getElementById(
-							"verify-email-continue-btn",
-						);
-
 						verifyEmailInfo.textContent =
-							"This email verification link is invalid or has expired go back and request a new link";
-
-						verifyEmailContinueBtn.textContent = "Retry";
+							"Error:\nThe email link is probably expired go back to login page and request a new link";
 					});
 
 				break;
@@ -101,21 +104,27 @@ const PasswordReset = () => {
 					className={`w-full h-full ${retryReset ? "" : "hidden"}`}>
 					<label
 						htmlFor="#inp-password-reset"
-						className={`block ${retryReset ? "hidden" : ""}`}>
+						className={`block ${retryReset ? "hidden" : ""} ml-[5%]`}>
 						New Password
 					</label>
-					<input
-						className={`w-[90%] ring-2 ring-slate-600 outline-accent rounded block ${
-							retryReset ? "hidden" : ""
-						}`}
-						type="password"
-						name="password"
-						id="inp-password-reset"
-						autoComplete="current-password"
-						onChange={(e) => {
-							validatePasswordOnChange(e, "reset");
-						}}
-					/>
+					<div className=" block w-[90%] p-[1px] mx-auto rounded-lg border-2 ring-1 ring-slate-600 relative bg-white overflow-hidden">
+						<input
+							type="password"
+							name="resetpassword"
+							id="inp-password-reset"
+							className="inline w-[85%] outline-white bg-transparent"
+							onChange={(e) => {
+								validatePasswordOnChange(e, "reset");
+							}}
+							onFocus={(e) => passwordIsFocused(e)}
+							onBlur={(e) => passwordIsBlur(e)}
+							required
+						/>
+						{/* secondary password toggle */}
+						<i
+							className="fas fa-eye ml-1"
+							onClick={(e) => showHidePassword(e)}></i>
+					</div>
 					<div
 						id="password-check-reset"
 						className={`text-[12px] hidden ${retryReset ? "hidden" : ""}`}>
@@ -167,12 +176,28 @@ const PasswordReset = () => {
 					<p className=" mx-2 text-center text-slate-700 font-specialElite">
 						Your email has been verified click continue to proceed
 					</p>
-					<Link
-						href="/signup"
-						className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px]`}
-						id="verify-email-continue-btn">
-						Continue
-					</Link>
+					{/* show continue button if continue URL is valid */}
+					{continueURLState ? (
+						<Link
+							href={continueURLState}
+							className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px]`}
+							id="verify-email-continue-btn">
+							Continue
+						</Link>
+					) : (
+						""
+					)}
+					{/* if continue URL is not valid show retry button */}
+					{!continueURLState ? (
+						<Link
+							href="/request_email_verification"
+							className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px]`}
+							id="verify-email-continue-btn">
+							Retry
+						</Link>
+					) : (
+						""
+					)}
 				</div>
 			</div>
 			<BallSpinnerModal />

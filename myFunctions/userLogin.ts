@@ -1,37 +1,46 @@
 import { appAuth } from "@/firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { hideInfoLogin, showInfoLogin } from "./showHideLoginInfo";
+import { hideFormInfo, showFormInfo } from "./showHideFormInfo";
+import { NextRouter } from "next/router";
 
 export default async function loginUserAccount(
 	email: string,
 	password: string,
+	router: NextRouter,
 ) {
 	signInWithEmailAndPassword(appAuth, email, password)
-		.then((credential) => {})
+		.then((credential) => {
+			router.push("/quizroom");
+		})
 		.catch((err: Error) => {
 			if (err.message == "Firebase: Error (auth/user-not-found).") {
-				showInfoLogin("account does not exist, check email and try again");
-
-				setTimeout(() => {
-					hideInfoLogin();
-				}, 4000);
-			} else if (err.message == "Firebase: Error (auth/wrong-password).") {
-				showInfoLogin(
-					"incorrect password, check password and try again or click forgot password to reset password",
+				showFormInfo(
+					"account does not exist, check email and try again",
+					"login",
 				);
 
 				setTimeout(() => {
-					hideInfoLogin();
+					hideFormInfo("login");
+				}, 4000);
+			} else if (err.message == "Firebase: Error (auth/wrong-password).") {
+				showFormInfo(
+					"incorrect password, check password and try again or click forgot password to reset password",
+					"login",
+				);
+
+				setTimeout(() => {
+					hideFormInfo("login");
 				}, 5000);
 			} else if (
 				err.message == "Firebase: Error (auth/network-request-failed)."
 			) {
-				showInfoLogin(
+				showFormInfo(
 					"Network failure, please connect to a different network and try again.",
+					"login",
 				);
 
 				setTimeout(() => {
-					hideInfoLogin();
+					hideFormInfo("login");
 				}, 5000);
 			}
 		});
