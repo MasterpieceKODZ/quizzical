@@ -18,6 +18,10 @@ const Welcome = () => {
 		const brandImg = document.getElementById("img-app-name");
 		const btnAcceptChallenge = document.getElementById("btn-accept-challenge");
 
+		// read welcome message for - screen readers
+		const welTxtSR: any = document.getElementById("welcome-text-SR");
+		welTxtSR.textContent = "welcome to quizzical";
+
 		// start welcome animation
 		let joinedWelcomeText = "";
 
@@ -43,6 +47,10 @@ const Welcome = () => {
 
 					const challengeTextArray = getChallengeText();
 
+					// read challenge message for - screen readers
+					const chalMsg: any = document.getElementById("challenge-text-SR");
+					chalMsg.textContent = challengeTextArray.join("");
+
 					challengeTextArray.forEach((char: any, index: number) => {
 						setTimeout(() => {
 							joinedChallengeText = joinedChallengeText + char;
@@ -53,6 +61,9 @@ const Welcome = () => {
 							if (index == challengeTextArray.length - 1) {
 								btnAcceptChallenge?.classList.remove("invisible");
 								btnAcceptChallenge?.classList.add("visible");
+								setTimeout(() => {
+									btnAcceptChallenge?.focus();
+								}, 1000);
 							}
 						}, index * 60);
 					});
@@ -110,6 +121,15 @@ const Welcome = () => {
 				onClick={acceptChallenge}>
 				ACCEPT CHALLENGE
 			</button>
+			{/* for screen readerss only */}
+			<p
+				role="alert"
+				className="h-0 w-0 overflow-hidden"
+				id="welcome-text-SR"></p>
+			<p
+				role="alert"
+				className="h-0 w-0 overflow-hidden"
+				id="challenge-text-SR"></p>
 		</div>
 	);
 };

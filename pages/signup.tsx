@@ -1,5 +1,8 @@
 import BallSpinnerModal from "@/components/BallSpinners";
-import { showHidePassword } from "@/myFunctions/passwordToggle";
+import {
+	passwordFocusAssist,
+	showHidePassword,
+} from "@/myFunctions/passwordToggle";
 import createUserAccount, {
 	checkSignUpPasswordMatch,
 } from "@/myFunctions/userSignUp";
@@ -7,7 +10,7 @@ import { validatePasswordOnChange } from "@/myFunctions/validatePassword";
 
 const SignIn = () => {
 	return (
-		<div className="login-root min-h-[100vh] overflow-y-auto relative bg-slate-200">
+		<div className="signup-root min-h-[100vh] overflow-y-auto relative bg-slate-200">
 			<div className="flex items-center justify-center py-3">
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img
@@ -16,7 +19,9 @@ const SignIn = () => {
 					className="img-signup-brand w-[30%] max-w-[215px] min-w-[130px] h-auto object-cover"
 				/>
 			</div>
-			<p className="text-center my-1 text-primary font-bold text-[18px] font-julee">
+			<p
+				tabIndex={1}
+				className="text-center my-1 text-primary font-bold text-[18px] mobileL:text-[23px] mobileXL:text-[29px] font-julee w-max mx-auto">
 				Create Account
 			</p>
 			<div className="signup-form-root w-full max-w-[400px] mx-auto">
@@ -29,7 +34,7 @@ const SignIn = () => {
 					<div className=" w-full mt-4">
 						<label
 							htmlFor="#inp-email-signup"
-							className="w-[80%] block text-[17px] mx-auto">
+							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
 							Email
 						</label>
 						<input
@@ -37,21 +42,19 @@ const SignIn = () => {
 							name="signupemail"
 							id="inp-email-signup"
 							placeholder="name@domain.com"
-							className="block mx-auto w-[80%] rounded p-[2px]"
+							className="block mx-auto w-[80%] p-[2px] rounded mobileL:text-[18px] mobileXL:text-[22px]"
 							autoComplete="email"
 							required
 						/>
 						<p
+							role="alert"
 							id="email-error-signup"
-							className="mt-2 text-red-600 text-[12px] w-[80%] hidden mx-auto">
-							this email address is not valid please enter a valid address and
-							try again
-						</p>
+							className="mt-2 text-red-600 text-[10px] mobileL:text-[14px] mobileXL:text-[17px] w-[80%] hidden mx-auto"></p>
 					</div>
 					<div className=" w-full mt-6">
 						<label
 							htmlFor="#inp-password-signup"
-							className="w-[80%] block text-[17px] mx-auto">
+							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
 							Password
 						</label>
 						<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
@@ -59,16 +62,20 @@ const SignIn = () => {
 								type="password"
 								name="signuppassword"
 								id="inp-password-signup"
-								className="inline w-[90%] outline-white bg-transparent"
+								className="inline w-[90%] outline-white bg-transparent mobileL:text-[18px] mobileXL:text-[22px]"
 								onChange={(e) => {
 									validatePasswordOnChange(e, "signup");
 								}}
+								onFocus={(e) => passwordFocusAssist("signup")}
+								onBlur={(e) => passwordFocusAssist("signup")}
 								required
 							/>
 							{/* secondary password toggle */}
-							<i
-								className="fas fa-eye ml-1"
-								onClick={(e) => showHidePassword(e)}></i>
+							<button
+								type="button"
+								aria-label="password toggle"
+								className="fas fa-eye ml-1 w-max h-max bg-transparent border-0"
+								onClick={(e) => showHidePassword(e, "signup")}></button>
 						</div>
 						<div
 							id="password-check-signup"
@@ -95,7 +102,7 @@ const SignIn = () => {
 						</div>
 						<label
 							htmlFor="#inp-confirm-password-signup"
-							className="w-[80%] block text-[17px] mx-auto">
+							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
 							Confirm Password
 						</label>
 						<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
@@ -103,35 +110,43 @@ const SignIn = () => {
 								type="password"
 								name="signuppasswordconfirm"
 								id="inp-confirm-password-signup"
-								className="inline w-[90%] outline-white bg-transparent"
+								className="inline w-[90%] outline-white bg-transparent mobileL:text-[18px] mobileXL:text-[22px]"
 								onChange={checkSignUpPasswordMatch}
+								onFocus={(e) => passwordFocusAssist("signup")}
+								onBlur={(e) => passwordFocusAssist("signup")}
 								required
 							/>
 							{/* secondary password toggle */}
-							<i
-								className="fas fa-eye ml-1"
-								onClick={(e) => showHidePassword(e)}></i>
+							<button
+								type="button"
+								aria-label="password toggle"
+								className="fas fa-eye ml-1 w-max h-max bg-transparent border-0"
+								onClick={(e) => showHidePassword(e, "signup")}></button>
 						</div>
-						{/* <input
-							type="password"
-							name="signuppassword"
-							id="inp-confirm-password-signup"
-							className=" block mx-auto border-2 w-[80%] rounded-lg ring-1 ring-slate-600  outline-accent"
-							onChange={checkSignUpPasswordMatch}
-							required
-						/> */}
+						{/* ------------------------------------------------------------------- */}
+						{/* for screen readers only */}
+						<p
+							role="alert"
+							id="signup-password-status"
+							className="w-0 h-0 overflow-hidden">
+							password status
+						</p>
+						<p
+							role="alert"
+							id="signup-password-req"
+							className="w-0 h-0 overflow-hidden"></p>
+						{/* ------------------------------------------------------------------- */}
 					</div>
 					<p
+						role="alert"
 						id="signup-error-console"
-						className="w-[80%] text-center text-red-600 text-[12px] bg-red-200 p-2 mt-5 rounded-md ring-1 ring-red-400 hidden">
-						There was an error while processing your data please check your
-						network and try again.
-					</p>
-
+						className="w-[80%] text-center text-red-600  text-[10px] mobileL:text-[14px] mobileXL:text-[18px] bg-red-200 p-2 mt-5 rounded-md ring-1 ring-red-400 hidden"></p>
 					<button
 						type="submit"
-						className="px-8 py-[2px] mt-8 rounded-lg bg-primary ring-2 ring-secondary text-white text-[18px]">
-						Submit
+						className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] relative overflow-hidden">
+						<div className="w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[16px]  mobileL:text-[18px] mobileXL:text-[22px]">
+							SUBMIT
+						</div>
 					</button>
 				</form>
 			</div>

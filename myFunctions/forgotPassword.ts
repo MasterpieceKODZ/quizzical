@@ -15,7 +15,7 @@ export async function handelForgotPassword() {
 		sendPasswordResetEmail(appAuth, emailValue)
 			.then(() => {
 				showFormInfo(
-					`A password reset email has been sent to ${emailValue} follow the instruction in the email to reset your password`,
+					`A password reset email has been sent to ${emailValue}, follow the instruction in the email to reset your password`,
 					"login",
 				);
 				setTimeout(() => {
@@ -35,7 +35,7 @@ export async function handelForgotPassword() {
 				} else {
 					// unknown error
 					showFormInfo(
-						"there was an error while trying to send password reset email please try again, if error persist change your network and try again.",
+						"there was an error while trying to send password reset email, please try again, if error persist, change your network and try again.",
 						"login",
 					);
 					setTimeout(() => {

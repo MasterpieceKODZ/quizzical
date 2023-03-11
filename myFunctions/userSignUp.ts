@@ -81,13 +81,22 @@ export default async function createUserAccount() {
 				"passwords do not match, check passwords and try again.",
 				"signup",
 			);
+			setTimeout(() => {
+				hideFormInfo("signup");
+			}, 5000);
 		}
 	} else {
 		showFormInfo(
 			"invalid email or password, please check and try again,",
 			"signup",
 		);
+
+		setTimeout(() => {
+			hideFormInfo("signup");
+		}, 5000);
 	}
+
+	hideLoadingSpinner();
 }
 
 export async function checkSignUpPasswordMatch() {
@@ -99,6 +108,9 @@ export async function checkSignUpPasswordMatch() {
 	if (signUpPassword.value != confirmSignUpPassword.value) {
 		showFormInfo("passwords do not match", "signup");
 	} else {
-		hideFormInfo("signup");
+		showFormInfo("passwords are a match", "signup");
+		setTimeout(() => {
+			hideFormInfo("signup");
+		}, 2000);
 	}
 }

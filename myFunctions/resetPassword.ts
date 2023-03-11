@@ -35,7 +35,7 @@ export async function resetUserPassword(
 						})
 						.catch((err) => {
 							alert(
-								"unable to sign you in please go back to login screen and try to login with your new password",
+								"unable to sign you in, please go back to login screen and try to login with your new password",
 							);
 							setRetryPasswordReset(true);
 							hideLoadingSpinner();

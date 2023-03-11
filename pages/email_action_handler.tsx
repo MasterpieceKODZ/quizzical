@@ -1,6 +1,9 @@
 import BallSpinnerModal from "@/components/BallSpinners";
 import { appAuth } from "@/firebase.config";
-import { showHidePassword } from "@/myFunctions/passwordToggle";
+import {
+	passwordFocusAssist,
+	showHidePassword,
+} from "@/myFunctions/passwordToggle";
 import { resetUserPassword } from "@/myFunctions/resetPassword";
 import {
 	hideLoadingSpinner,
@@ -47,10 +50,13 @@ const PasswordReset = () => {
 							);
 							newPasswordConsole?.classList.remove("hidden");
 							hideLoadingSpinner();
+							setTimeout(() => {
+								document.getElementById("inp-password-reset")?.focus();
+							}, 1000);
 						})
 						.catch((err) => {
 							hideLoadingSpinner();
-							alert("action code has expired go back and try again.");
+							alert("action code has expired, go back and try again.");
 							setRetryReset(true);
 						});
 				} else {
@@ -80,7 +86,7 @@ const PasswordReset = () => {
 							"verify-email-console",
 						);
 						verifyEmailInfo.textContent =
-							"Error:\nThe email link is probably expired go back to login page and request a new link";
+							"Error.\nThe email link is probably expired, go back to login page and request a new link";
 					});
 
 				break;
@@ -97,27 +103,36 @@ const PasswordReset = () => {
 				className={`w-[90%] max-w-[400px] border-[1.5px] border-accent rounded-lg py-10 px-4 bg-slate-200 hidden`}>
 				<div
 					id="new-password-console"
-					className={`w-full h-full ${retryReset ? "" : "hidden"}`}>
+					className="w-full h-full hidden">
 					<label
-						htmlFor="#inp-password-reset"
-						className={`block ${retryReset ? "hidden" : ""} ml-[5%]`}>
+						htmlFor="inp-password-reset"
+						className={`block ${
+							retryReset ? "hidden" : ""
+						} ml-[10%] text-[16px] mobileL:text-[18px] mobileXL:text-[22px]`}>
 						New Password
 					</label>
-					<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
+					<div
+						className={`password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden ${
+							retryReset ? "hidden" : ""
+						}`}>
 						<input
 							type="password"
 							name="resetpassword"
 							id="inp-password-reset"
-							className="inline w-[85%] outline-white bg-transparent"
+							className="inline w-[85%] outline-white bg-transparent  mobileL:text-[18px] mobileXL:text-[22px]"
 							onChange={(e) => {
 								validatePasswordOnChange(e, "reset");
 							}}
+							onFocus={(e) => passwordFocusAssist("reset")}
+							onBlur={(e) => passwordFocusAssist("reset")}
 							required
 						/>
 						{/* secondary password toggle */}
-						<i
-							className="fas fa-eye ml-1"
-							onClick={(e) => showHidePassword(e)}></i>
+						<button
+							type="button"
+							aria-label="password toggle"
+							className="fas fa-eye ml-1 w-max h-max bg-transparent border-0"
+							onClick={(e) => showHidePassword(e, "reset")}></button>
 					</div>
 					<div
 						id="password-check-reset"
@@ -142,8 +157,23 @@ const PasswordReset = () => {
 							1 non-alphanumeric character. <i className="fas fa-xmark"></i>
 						</p>
 					</div>
+					{/* ----------------------------------------------------- */}
+					{/* for screen readers only */}
+					<p
+						role="alert"
+						id="reset-password-status"
+						className="w-0 h-0 overflow-hidden">
+						password status
+					</p>
+					<p
+						role="alert"
+						id="reset-password-req"
+						className="w-0 h-0 overflow-hidden"></p>
+					{/* ----------------------------------------------------- */}
 					<button
-						className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px] ${
+						type="button"
+						aria-label="submit"
+						className={`min-w-[180px] block min-h-[46px] p-0 mt-4 mx-auto rounded-lg bg-[#4e4ec2] relative overflow-hidden ${
 							retryReset ? "hidden" : ""
 						}`}
 						onClick={() => {
@@ -154,14 +184,24 @@ const PasswordReset = () => {
 								setRetryReset,
 							);
 						}}>
-						Confirm
+						<div
+							aria-label="submit"
+							className="w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[16px]  mobileL:text-[18px] mobileXL:text-[22px]">
+							SUBMIT
+						</div>
 					</button>
 					<Link
 						href="/login"
-						className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px] ${
-							retryReset ? "" : "hidden"
-						}`}>
-						Retry
+						passHref
+						className={`w-max h-max block mx-auto my-8
+						 ${retryReset ? "" : "hidden"}`}>
+						<button
+							type="button"
+							className={`min-w-[180px] min-h-[46px] p-0 rounded-lg bg-[#4e4ec2] relative overflow-hidden`}>
+							<div className="w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[16px]  mobileL:text-[18px] mobileXL:text-[22px]">
+								RETRY
+							</div>
+						</button>
 					</Link>
 				</div>
 				<div
