@@ -89,17 +89,17 @@ export async function getEmailValidationResponse(
 			emailIsValid = false;
 		} else if (res.emailState == "INVALID") {
 			hideLoadingSpinner();
-			emailErrorTag.textContent = `invalid email please enter a valid email address and try again`;
+			emailErrorTag.textContent = `invalid email, please enter a valid email address and try again`;
 			emailErrorTag.classList.remove("hidden");
 			emailIsValid = false;
 		} else if (res.emailState == "CATCH_ALL") {
 			hideLoadingSpinner();
-			emailErrorTag.textContent = `catch all emails are not valid use a different email address and try again.`;
+			emailErrorTag.textContent = `catch all emails are not valid, use a different email address and try again.`;
 			emailErrorTag.classList.remove("hidden");
 			emailIsValid = false;
 		} else if (res.emailState == "ROLE") {
 			hideLoadingSpinner();
-			emailErrorTag.textContent = `role emails are not valid use a different email and try again.`;
+			emailErrorTag.textContent = `role emails are not valid, use a different email and try again.`;
 			emailErrorTag.classList.remove("hidden");
 			emailIsValid = false;
 		}

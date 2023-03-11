@@ -25,3 +25,8 @@ input[type="email"] {
 .password-host input {
 	outline: none !important;
 }
+
+.sub-btn-in {
+	box-shadow: 2px 2px 3px 3px black;
+	text-shadow: 2px 2px 2px black;
+}

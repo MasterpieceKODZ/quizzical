@@ -22,6 +22,8 @@ export default function Home() {
 
 		// write developer name
 		setTimeout(() => {
+			const devNameRed: any = document.getElementById("dev-name-SR");
+			devNameRed.textContent = "masterpiece kodz";
 			let joinedDevName = "";
 
 			const devNameArray = "MASTERPIECE-KODZ".split("");
@@ -70,6 +72,11 @@ export default function Home() {
 					} font-wallpoet dev-name`}>
 					{devName}
 				</p>
+				{/* for screen readers only */}
+				<p
+					id="dev-name-SR"
+					className=" w-0 h-0 overflow-hidden"
+					role="alert"></p>
 			</div>
 		</div>
 	);

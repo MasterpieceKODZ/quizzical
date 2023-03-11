@@ -24,7 +24,7 @@ export default async function loginUserAccount(
 				}, 4000);
 			} else if (err.message == "Firebase: Error (auth/wrong-password).") {
 				showFormInfo(
-					"incorrect password, check password and try again or click forgot password to reset password",
+					"incorrect password, check password and try again, or click forgot password to reset password",
 					"login",
 				);
 

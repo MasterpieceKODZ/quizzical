@@ -10,5 +10,6 @@ export async function showFormInfo(info: string, action: string) {
 
 export async function hideFormInfo(action: string) {
 	const errorConsole: any = document.getElementById(`${action}-error-console`);
+	errorConsole.textContent = "";
 	errorConsole.classList.add("hidden");
 }
