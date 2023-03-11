@@ -1,10 +1,6 @@
 import BallSpinnerModal from "@/components/BallSpinners";
 import { appAuth } from "@/firebase.config";
-import {
-	passwordIsBlur,
-	passwordIsFocused,
-	showHidePassword,
-} from "@/myFunctions/passwordFocus";
+import { showHidePassword } from "@/myFunctions/passwordToggle";
 import { resetUserPassword } from "@/myFunctions/resetPassword";
 import {
 	hideLoadingSpinner,
@@ -107,7 +103,7 @@ const PasswordReset = () => {
 						className={`block ${retryReset ? "hidden" : ""} ml-[5%]`}>
 						New Password
 					</label>
-					<div className=" block w-[90%] p-[1px] mx-auto rounded-lg border-2 ring-1 ring-slate-600 relative bg-white overflow-hidden">
+					<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
 						<input
 							type="password"
 							name="resetpassword"
@@ -116,8 +112,6 @@ const PasswordReset = () => {
 							onChange={(e) => {
 								validatePasswordOnChange(e, "reset");
 							}}
-							onFocus={(e) => passwordIsFocused(e)}
-							onBlur={(e) => passwordIsBlur(e)}
 							required
 						/>
 						{/* secondary password toggle */}

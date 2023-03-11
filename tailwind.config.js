@@ -2,7 +2,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-	content: ["./pages/**/*.tsx"],
+	content: ["./pages/**/*.tsx", "./components/*.tsx"],
 	theme: {
 		extend: {
 			screens: {
@@ -16,6 +16,7 @@ module.exports = {
 				laptopM: "1024px",
 				laptopL: "1400px",
 				tv: "2500px",
+				short: { raw: "(min-height: 470px)" },
 				tallXS: { raw: "(min-height: 500px)" },
 				tallS: { raw: "(min-height: 600px)" },
 				tall: { raw: "(min-height: 700px)" },

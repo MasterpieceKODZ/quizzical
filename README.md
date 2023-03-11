@@ -107,14 +107,6 @@ if password is successfully resetted the user is signed in immediately and sent 
 
 the _setRetryPasswordReset_ function argument is used to update the _retryReset_ state of the reset password page, and if the _retryReset_ state is true a retry button is shown and all other UI elements are hidden, the retry button navigates the user back to the login page, so they can start the **forgot password** process all over again.
 
-#### **passwordFocus.ts/passwordIsFocused(e: any)** : void
-
-This function is the callback function of the password input focus event listener, it replicates the behaviour of a text input by creating an outline on the parent div element when the input element receives focus
-
-#### **passwordFocus.ts/passwordIsBlur(e: any)** : void
-
-This function is the callback function of the password input blur event listener, it is a direct opposite of the _passwordIsFocused_ function
-
 #### **passwordFocus.ts/showHidePassword(e: any)** : void
 
 This is the click event callback function of the secondary password toggle button, it shows the password value by changing the input type from password to text when password is invisible, and it reverses the process when password is visible

@@ -1,9 +1,5 @@
 import BallSpinnerModal from "@/components/BallSpinners";
-import {
-	passwordIsBlur,
-	passwordIsFocused,
-	showHidePassword,
-} from "@/myFunctions/passwordFocus";
+import { showHidePassword } from "@/myFunctions/passwordToggle";
 import createUserAccount, {
 	checkSignUpPasswordMatch,
 } from "@/myFunctions/userSignUp";
@@ -40,7 +36,8 @@ const SignIn = () => {
 							type="email"
 							name="signupemail"
 							id="inp-email-signup"
-							className=" block mx-auto border-2 w-[80%] rounded-lg ring-1 ring-slate-600 outline-accent"
+							placeholder="name@domain.com"
+							className="block mx-auto w-[80%] rounded p-[2px]"
 							autoComplete="email"
 							required
 						/>
@@ -57,7 +54,7 @@ const SignIn = () => {
 							className="w-[80%] block text-[17px] mx-auto">
 							Password
 						</label>
-						<div className=" block w-[80%] p-[1px] mx-auto rounded-lg border-2 ring-1 ring-slate-600 relative bg-white overflow-hidden">
+						<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
 							<input
 								type="password"
 								name="signuppassword"
@@ -66,8 +63,6 @@ const SignIn = () => {
 								onChange={(e) => {
 									validatePasswordOnChange(e, "signup");
 								}}
-								onFocus={(e) => passwordIsFocused(e)}
-								onBlur={(e) => passwordIsBlur(e)}
 								required
 							/>
 							{/* secondary password toggle */}
@@ -75,16 +70,6 @@ const SignIn = () => {
 								className="fas fa-eye ml-1"
 								onClick={(e) => showHidePassword(e)}></i>
 						</div>
-						{/* <input
-							type="password"
-							name="signuppassword"
-							id="inp-password-signup"
-							className=" block mx-auto border-2 w-[80%] rounded-lg ring-1 ring-slate-600  outline-accent"
-							onChange={(e) => {
-								validatePasswordOnChange(e, "signup");
-							}}
-							required
-						/> */}
 						<div
 							id="password-check-signup"
 							className="text-[12px] hidden w-[80%] mx-auto">
@@ -113,15 +98,13 @@ const SignIn = () => {
 							className="w-[80%] block text-[17px] mx-auto">
 							Confirm Password
 						</label>
-						<div className=" block w-[80%] p-[1px] mx-auto rounded-lg border-2 ring-1 ring-slate-600 relative bg-white overflow-hidden">
+						<div className="password-host block w-[80%] p-[2px] mx-auto rounded relative bg-white overflow-hidden">
 							<input
 								type="password"
 								name="signuppasswordconfirm"
 								id="inp-confirm-password-signup"
 								className="inline w-[90%] outline-white bg-transparent"
 								onChange={checkSignUpPasswordMatch}
-								onFocus={(e) => passwordIsFocused(e)}
-								onBlur={(e) => passwordIsBlur(e)}
 								required
 							/>
 							{/* secondary password toggle */}
