@@ -86,7 +86,11 @@ const Welcome = () => {
 
 		// if the user is signed in, navigate to quizroom else show login screen
 		if (user) {
-			router.push("/quizroom");
+			if (user.emailVerified) {
+				router.push("/quizroom");
+			} else {
+				router.push("/request_email_verification");
+			}
 		} else {
 			router.push("/login");
 		}

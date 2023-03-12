@@ -80,13 +80,25 @@ const PasswordReset = () => {
 						);
 						verifyEmailInfo?.classList.remove("hidden");
 						verifyEmailInfo?.classList.add("flex");
+						// read email verification status
+						const emailVerStat: any =
+							document.getElementById("email-verif-status");
+						emailVerStat.textContent =
+							"Your email has been verified, click continue to proceed";
 					})
 					.catch((err) => {
+						hideLoadingSpinner();
 						const verifyEmailInfo: any = document.getElementById(
 							"verify-email-console",
 						);
 						verifyEmailInfo.textContent =
-							"Error.\nThe email link is probably expired, go back to login page and request a new link";
+							"Error. The email link is probably expired, go back to login page and request a new link";
+						setContinueURLState("");
+						// read email verification status
+						const emailVerStat: any =
+							document.getElementById("email-verif-status");
+						emailVerStat.textContent =
+							"Error. The email link is probably expired, go back to login page and request a new link";
 					});
 
 				break;
@@ -97,7 +109,7 @@ const PasswordReset = () => {
 	}, []);
 
 	return (
-		<div className="relative flex items-center justify-center min-h-[100vh]">
+		<div className="relative flex items-center justify-center min-h-[100vh] to-blue-100">
 			<div
 				id="email-action-console"
 				className={`w-[90%] max-w-[400px] border-[1.5px] border-accent rounded-lg py-10 px-4 bg-slate-200 hidden`}>
@@ -162,9 +174,7 @@ const PasswordReset = () => {
 					<p
 						role="alert"
 						id="reset-password-status"
-						className="w-0 h-0 overflow-hidden">
-						password status
-					</p>
+						className="w-0 h-0 overflow-hidden"></p>
 					<p
 						role="alert"
 						id="reset-password-req"
@@ -206,9 +216,9 @@ const PasswordReset = () => {
 				</div>
 				<div
 					id="verify-email-console"
-					className="w-full h-full hidden justify-center items-center">
+					className="w-full h-full hidden justify-center items-center flex-col">
 					<p className=" mx-2 text-center text-slate-700 font-specialElite">
-						Your email has been verified click continue to proceed
+						Your email has been verified, click continue to proceed
 					</p>
 					{/* show continue button if continue URL is valid */}
 					{continueURLState ? (
@@ -232,6 +242,11 @@ const PasswordReset = () => {
 					) : (
 						""
 					)}
+					{/* for screen readers only */}
+					<p
+						role="alert"
+						id="email-verif-status"
+						className="w-0 h-0 overflow-hidden"></p>
 				</div>
 			</div>
 			<BallSpinnerModal />

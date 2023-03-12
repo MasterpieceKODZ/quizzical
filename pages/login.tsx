@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import BallSpinnerModal from "@/components/BallSpinners";
 import { appAuth } from "@/firebase.config";
 import { handelForgotPassword } from "@/myFunctions/forgotPassword";
@@ -17,11 +18,19 @@ const Login = () => {
 	const router = useRouter();
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
-			console.log(user);
 			if (user) {
-				//router.push("/quizroom");
+				console.log(user.emailVerified);
+
+				if (user.emailVerified) {
+					router.push("/quizroom");
+				} else {
+					router.push("/request_email_verification");
+				}
 			}
 		});
+
+		const pageNameLogin: any = document.getElementById("page-name-SR");
+		pageNameLogin.textContent = "Login";
 
 		return () => {
 			unsubscribe();
@@ -93,6 +102,10 @@ const Login = () => {
 						</div>
 						{/* ----------------------------------------------------- */}
 						{/* for screen readers only */}
+						<p
+							role="alert"
+							id="page-name-SR"
+							className="w-0 h-0 overflow-hidden"></p>
 						<p
 							role="alert"
 							id="login-password-status"
