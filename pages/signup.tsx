@@ -148,7 +148,7 @@ const SignIn = () => {
 					<p
 						role="alert"
 						id="signup-error-console"
-						className="w-[80%] text-center text-red-600  text-[10px] mobileL:text-[14px] mobileXL:text-[18px] bg-red-200 p-2 mt-5 rounded-md ring-1 ring-red-400 hidden"></p>
+						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-5 rounded-md ring-1 hidden"></p>
 					<button
 						type="submit"
 						className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] relative overflow-hidden">

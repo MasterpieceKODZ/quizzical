@@ -17,6 +17,7 @@ export async function handelForgotPassword() {
 				showFormInfo(
 					`A password reset email has been sent to ${emailValue}, follow the instruction in the email to reset your password`,
 					"login",
+					"info",
 				);
 				setTimeout(() => {
 					hideFormInfo("login");
@@ -28,6 +29,7 @@ export async function handelForgotPassword() {
 					showFormInfo(
 						"cannot send password reset email to a non-existent account, check your email address and try again",
 						"login",
+						"error",
 					);
 					setTimeout(() => {
 						hideFormInfo("login");
@@ -37,6 +39,7 @@ export async function handelForgotPassword() {
 					showFormInfo(
 						"there was an error while trying to send password reset email, please try again, if error persist, change your network and try again.",
 						"login",
+						"error",
 					);
 					setTimeout(() => {
 						hideFormInfo("login");
@@ -44,7 +47,11 @@ export async function handelForgotPassword() {
 				}
 			});
 	} else {
-		showFormInfo("enter the email address registered to your account", "login");
+		showFormInfo(
+			"enter the email address registered to your account",
+			"login",
+			"error",
+		);
 		setTimeout(() => {
 			hideFormInfo("login");
 		}, 4000);

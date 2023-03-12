@@ -17,6 +17,7 @@ export default async function loginUserAccount(
 				showFormInfo(
 					"account does not exist, check email and try again",
 					"login",
+					"error",
 				);
 
 				setTimeout(() => {
@@ -26,6 +27,7 @@ export default async function loginUserAccount(
 				showFormInfo(
 					"incorrect password, check password and try again, or click forgot password to reset password",
 					"login",
+					"error",
 				);
 
 				setTimeout(() => {
@@ -37,6 +39,7 @@ export default async function loginUserAccount(
 				showFormInfo(
 					"Network failure, please connect to a different network and try again.",
 					"login",
+					"error",
 				);
 
 				setTimeout(() => {

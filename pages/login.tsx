@@ -159,7 +159,7 @@ const Login = () => {
 					<p
 						role="alert"
 						id="login-error-console"
-						className="w-[80%] text-center text-red-600 text-[10px] mobileL:text-[14px] mobileXL:text-[18px] bg-red-200 p-2 mt-3 rounded-md ring-1 ring-red-400 hidden"></p>
+						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-3 rounded-md ring-1 hidden"></p>
 				</form>
 			</div>
 			<p
