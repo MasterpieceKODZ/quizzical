@@ -61,6 +61,7 @@ export async function validateEmailInputed(
 				showFormInfo(
 					"there was an error while validating email check your network and try again",
 					action,
+					"error",
 				);
 				setTimeout(() => {
 					hideFormInfo(action);

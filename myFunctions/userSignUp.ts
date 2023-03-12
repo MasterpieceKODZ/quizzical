@@ -49,6 +49,7 @@ export default async function createUserAccount() {
 					showFormInfo(
 						`An email verification link has been sent to ${userCredentials.user.email}, you must verify your email to proceed, click the link in the email to verify your email address`,
 						"signup",
+						"info",
 					);
 					// dismiss message after 8 secs
 					setTimeout(() => {
@@ -61,6 +62,7 @@ export default async function createUserAccount() {
 						showFormInfo(
 							"There is already an account with this email address.",
 							"signup",
+							"info",
 						);
 						// dismiss message after 4 secs
 						setTimeout(() => {
@@ -70,6 +72,7 @@ export default async function createUserAccount() {
 						showFormInfo(
 							"An error occured while trying to create your account, please check your network and try again",
 							"signup",
+							"error",
 						);
 						// dismiss message after 6 secs
 						setTimeout(() => {
@@ -81,6 +84,7 @@ export default async function createUserAccount() {
 			showFormInfo(
 				"passwords do not match, check passwords and try again.",
 				"signup",
+				"error",
 			);
 			setTimeout(() => {
 				hideFormInfo("signup");
@@ -90,6 +94,7 @@ export default async function createUserAccount() {
 		showFormInfo(
 			"invalid email or password, please check and try again,",
 			"signup",
+			"error",
 		);
 
 		setTimeout(() => {
@@ -107,11 +112,16 @@ export async function checkSignUpPasswordMatch() {
 	);
 
 	if (signUpPassword.value != confirmSignUpPassword.value) {
-		showFormInfo("passwords do not match", "signup");
-	} else {
-		showFormInfo("passwords are a match", "signup");
+		showFormInfo("passwords do not match", "signup", "error");
 		setTimeout(() => {
 			hideFormInfo("signup");
-		}, 2000);
+		}, 3000);
+	} else {
+		if (confirmSignUpPassword.value) {
+			showFormInfo("passwords are a match", "signup", "info");
+			setTimeout(() => {
+				hideFormInfo("signup");
+			}, 2000);
+		}
 	}
 }

@@ -22,6 +22,7 @@ export default async function initiateLoginProcess(router: NextRouter) {
 		showFormInfo(
 			"Your password does not pass the minimum password requirements, change password and try again.",
 			"login",
+			"error",
 		);
 		setTimeout(() => {
 			hideFormInfo("login");
