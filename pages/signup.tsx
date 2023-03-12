@@ -7,8 +7,14 @@ import createUserAccount, {
 	checkSignUpPasswordMatch,
 } from "@/myFunctions/userSignUp";
 import { validatePasswordOnChange } from "@/myFunctions/validatePassword";
+import { useEffect } from "react";
 
 const SignIn = () => {
+	useEffect(() => {
+		const pageNameLogin: any = document.getElementById("page-name-SR");
+		pageNameLogin.textContent = "Create Account";
+	}, []);
+
 	return (
 		<div className="signup-root min-h-[100vh] overflow-y-auto relative bg-slate-200">
 			<div className="flex items-center justify-center py-3">
@@ -127,10 +133,12 @@ const SignIn = () => {
 						{/* for screen readers only */}
 						<p
 							role="alert"
+							id="page-name-SR"
+							className="w-0 h-0 overflow-hidden"></p>
+						<p
+							role="alert"
 							id="signup-password-status"
-							className="w-0 h-0 overflow-hidden">
-							password status
-						</p>
+							className="w-0 h-0 overflow-hidden"></p>
 						<p
 							role="alert"
 							id="signup-password-req"

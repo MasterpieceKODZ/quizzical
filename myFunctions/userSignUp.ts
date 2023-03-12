@@ -38,11 +38,12 @@ export default async function createUserAccount() {
 	if (emailIsValid && passwordIsValid) {
 		// check is passwords match
 		if (passwordValue == confirmSignUpPassword.value) {
+			// create new user account
 			createUserWithEmailAndPassword(appAuth, emailValue, passwordValue)
 				.then((userCredentials: UserCredential) => {
 					// verifyy user email address
 					sendEmailVerification(userCredentials.user, {
-						url: "/signup_2",
+						url: "http://localhost:3000/signup_2",
 					});
 					hideLoadingSpinner();
 					showFormInfo(
