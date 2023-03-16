@@ -10,10 +10,10 @@ import { hideLoadingSpinner, showLoadingSpinner } from "./showHideSpinner";
 // update user data
 export async function updateUserData(router: NextRouter) {
 	showLoadingSpinner();
-	const displayNameInput = document.getElementById("inp-display-name");
-	const displayNameError = document.getElementById("username-error");
+	const displayNameInput: any = document.getElementById("inp-display-name");
+	const displayNameError: any = document.getElementById("username-error");
 
-	const displayName = displayNameInput?.value;
+	const displayName = displayNameInput.value;
 
 	if (displayName) {
 		const nonAlphaNumRegex = new RegExp(/\W/, "gi");
