@@ -13,7 +13,7 @@ export async function updateUserData(router: NextRouter) {
 	const displayNameInput = document.getElementById("inp-display-name");
 	const displayNameError = document.getElementById("username-error");
 
-	const displayName = displayNameInput.value;
+	const displayName = displayNameInput?.value;
 
 	if (displayName) {
 		const nonAlphaNumRegex = new RegExp(/\W/, "gi");
@@ -219,21 +219,21 @@ export async function updateUserData(router: NextRouter) {
 				}
 			} else {
 				hideLoadingSpinner();
-				displayNameInput.focus();
-				displayNameError.classList.remove("hidden");
+				displayNameInput?.focus();
+				displayNameError?.classList.remove("hidden");
 				displayNameError.textContent = "username is taken.";
 			}
 		} else {
 			hideLoadingSpinner();
-			displayNameInput.focus();
-			displayNameError.classList.remove("hidden");
+			displayNameInput?.focus();
+			displayNameError?.classList.remove("hidden");
 			displayNameError.textContent =
 				"username cannot contain any non-alphanumeric character";
 		}
 	} else {
 		hideLoadingSpinner();
-		displayNameInput.focus();
-		displayNameError.classList.remove("hidden");
+		displayNameInput?.focus();
+		displayNameError?.classList.remove("hidden");
 		displayNameError.textContent = "please choose a username";
 	}
 }
@@ -242,18 +242,18 @@ export async function updateUserData(router: NextRouter) {
 export async function displayNameOnChange(e: any) {
 	const dnError = document.getElementById("username-error");
 	dnError.textContent = "";
-	dnError.classList.add("hidden");
+	dnError?.classList.add("hidden");
 
 	const nonAlphaNumRegex = new RegExp(/\W/, "gi");
 	const displayNameError = document.getElementById("username-error");
 
 	if (nonAlphaNumRegex.test(e.target.value)) {
-		displayNameError.classList.remove("hidden");
+		displayNameError?.classList.remove("hidden");
 		displayNameError.textContent =
 			"username cannot contain any non-alphanumeric character";
 	} else {
 		displayNameError.textContent = "";
-		displayNameError.classList.add("hidden");
+		displayNameError?.classList.add("hidden");
 	}
 }
 
