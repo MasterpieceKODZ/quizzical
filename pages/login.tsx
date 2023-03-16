@@ -18,19 +18,28 @@ const Login = () => {
 	const router = useRouter();
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
-			if (user) {
-				console.log(user.emailVerified);
+			// refresh user authentication data
+			user?.reload();
 
+			// if user is signed in check the user email verification status
+			if (user) {
+				// if user is verified check if the user has set display name, if the user email is not verified redirect user to request_email_verification page
 				if (user.emailVerified) {
-					router.push("/quizroom");
+					// if user has set a display name redirect the user to quizroom else redirect the user to signup_2 page to set a display name
+					if (user.displayName) {
+						router.push("/quizroom");
+					} else {
+						router.push("/signup_2");
+					}
 				} else {
 					router.push("/request_email_verification");
 				}
+			} else {
+				// annouce page name with screen reader
+				const pageNameLogin: any = document.getElementById("page-name-SR");
+				pageNameLogin.textContent = "Login";
 			}
 		});
-
-		const pageNameLogin: any = document.getElementById("page-name-SR");
-		pageNameLogin.textContent = "Login";
 
 		return () => {
 			unsubscribe();
@@ -159,7 +168,7 @@ const Login = () => {
 					<p
 						role="alert"
 						id="login-error-console"
-						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-3 rounded-md ring-1 hidden"></p>
+						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-3 rounded-md hidden"></p>
 				</form>
 			</div>
 			<p

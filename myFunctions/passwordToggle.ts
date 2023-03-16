@@ -22,11 +22,8 @@ export async function passwordFocusAssist(action: string) {
 	const passReq: any = document.getElementById(`${action}-password-req`);
 	const passAssText = passReq?.textContent;
 	if (passAssText) {
-		console.log("pass state not empty");
-
 		passReq.textContent = "";
 	} else {
-		console.log("pass state empty");
 		passReq.textContent =
 			"minimum password requirement is, at least six letters, one number and one non-alphanumeric character";
 	}

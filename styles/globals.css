@@ -6,6 +6,7 @@
 	* {
 		@apply font-stylish;
 		box-sizing: border-box;
+		margin: 0;
 	}
 }
 
@@ -13,7 +14,8 @@
 	background-color: rgba(93, 103, 112, 0.774);
 }
 
-input[type="email"] {
+input[type="email"],
+#inp-display-name {
 	box-shadow: 0px 0px 3px 1px black;
 	outline: none !important;
 }
@@ -29,4 +31,39 @@ input[type="email"] {
 .sub-btn-in {
 	box-shadow: 2px 2px 3px 3px black;
 	text-shadow: 2px 2px 2px black;
+}
+
+.active {
+	border: 2px solid #34d399;
+}
+
+.cropper-view-box {
+	outline: 0;
+	box-shadow: 0 0 0 1px #ffdd00fe;
+}
+
+.feedback-success {
+	border: 1.5px solid rgb(3, 180, 3);
+	color: rgb(3, 180, 3);
+	background-color: rgb(214, 255, 214);
+}
+
+.feedback-error {
+	border: 1.5px solid rgb(180, 3, 3);
+	color: rgb(180, 3, 3);
+	background-color: rgb(255, 227, 227);
+}
+
+.feedback-info {
+	border: 1.5px solid rgb(3, 30, 180);
+	color: rgb(3, 30, 180);
+	background-color: rgb(203, 227, 255);
+}
+
+.cropper-image-cont {
+	scrollbar-width: none;
+}
+
+.cropper-image-cont::-webkit-scrollbar {
+	width: 0px;
 }

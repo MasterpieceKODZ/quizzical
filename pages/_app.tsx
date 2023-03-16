@@ -11,7 +11,8 @@ import "@/styles/launch-screen-media-queries.css";
 import "@/styles/welcome.css";
 import { Provider } from "react-redux";
 import reduxStore from "@/redux/reduxStore";
-import "@/styles/Font Awesome/css/all.css"
+import "@/styles/Font Awesome/css/all.css";
+import "cropperjs/dist/cropper.min.css";
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (

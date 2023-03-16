@@ -10,7 +10,15 @@ export default async function loginUserAccount(
 ) {
 	signInWithEmailAndPassword(appAuth, email, password)
 		.then((credential) => {
-			router.push("/quizroom");
+			if (credential.user.emailVerified) {
+				if (credential.user.displayName) {
+					router.push("/quizroom");
+				} else {
+					router.push("/signup_2");
+				}
+			} else {
+				router.push("/request_email_verification");
+			}
 		})
 		.catch((err: Error) => {
 			if (err.message == "Firebase: Error (auth/user-not-found).") {

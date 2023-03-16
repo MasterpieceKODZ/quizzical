@@ -56,16 +56,20 @@ const PasswordReset = () => {
 						})
 						.catch((err) => {
 							hideLoadingSpinner();
-							alert("action code has expired, go back and try again.");
+							alert(
+								"action code has expired, click the retry button to go back and try again.",
+							);
 							setRetryReset(true);
+							document.getElementById("btn-retry-password-reset")?.focus();
 						});
 				} else {
 					hideLoadingSpinner();
 					alert(
-						"an error occured, it could be your network, go back and try again.",
+						"an error occured, it could be your network, click the retry button to go back and try again.",
 					);
 
 					setRetryReset(true);
+					document.getElementById("btn-retry-password-reset")?.focus();
 				}
 				break;
 			case "verifyEmail":
@@ -75,37 +79,59 @@ const PasswordReset = () => {
 				applyActionCode(appAuth, actionCode)
 					.then((res) => {
 						hideLoadingSpinner();
-						const verifyEmailInfo = document.getElementById(
+						const verifyEmailConsole = document.getElementById(
 							"verify-email-console",
 						);
-						verifyEmailInfo?.classList.remove("hidden");
-						verifyEmailInfo?.classList.add("flex");
-						// read email verification status
+						verifyEmailConsole?.classList.remove("hidden");
+						verifyEmailConsole?.classList.add("flex");
+						// read email verification status for screen readers
 						const emailVerStat: any =
 							document.getElementById("email-verif-status");
 						emailVerStat.textContent =
 							"Your email has been verified, click continue to proceed";
+
+						// set focus on continue link button to assist screen reader users
+
+						const verifyEmailContBtn = document.getElementById(
+							"verify-email-continue-btn",
+						);
+						verifyEmailContBtn?.classList.remove("hidden");
+						verifyEmailContBtn?.classList.add("block");
+						verifyEmailContBtn?.focus();
 					})
 					.catch((err) => {
 						hideLoadingSpinner();
-						const verifyEmailInfo: any = document.getElementById(
+						const verifyEmailConsole = document.getElementById(
 							"verify-email-console",
 						);
+						verifyEmailConsole?.classList.remove("hidden");
+						verifyEmailConsole?.classList.add("flex");
+
+						const verifyEmailInfo: any =
+							document.getElementById("verify-email-info");
 						verifyEmailInfo.textContent =
-							"Error. The email link is probably expired, go back to login page and request a new link";
-						setContinueURLState("");
-						// read email verification status
+							"Error... The email link is probably expired, click the retry button to go back to login page and request a new link";
+						// read email verification status for screen readers
 						const emailVerStat: any =
 							document.getElementById("email-verif-status");
 						emailVerStat.textContent =
-							"Error. The email link is probably expired, go back to login page and request a new link";
+							"Error... The email link is probably expired, click the retry button to go back to login page and request a new link";
+
+						const retryEmailVerifyBtn = document.getElementById(
+							"verify-email-retry-btn",
+						);
+						retryEmailVerifyBtn?.classList.remove("hidden");
+						retryEmailVerifyBtn?.classList.add("block");
+						retryEmailVerifyBtn?.focus();
 					});
 
 				break;
 
 			default:
+				router.push("/login");
 				break;
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -201,6 +227,7 @@ const PasswordReset = () => {
 						</div>
 					</button>
 					<Link
+						id="btn-retry-password-reset"
 						href="/login"
 						passHref
 						className={`w-max h-max block mx-auto my-8
@@ -214,34 +241,27 @@ const PasswordReset = () => {
 						</button>
 					</Link>
 				</div>
+				{/* email veriffication layout */}
 				<div
 					id="verify-email-console"
 					className="w-full h-full hidden justify-center items-center flex-col">
-					<p className=" mx-2 text-center text-slate-700 font-specialElite">
+					<p
+						id="verify-email-info"
+						className="mx-2 text-center text-slate-700 font-specialElite">
 						Your email has been verified, click continue to proceed
 					</p>
-					{/* show continue button if continue URL is valid */}
-					{continueURLState ? (
-						<Link
-							href={continueURLState}
-							className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px]`}
-							id="verify-email-continue-btn">
-							Continue
-						</Link>
-					) : (
-						""
-					)}
-					{/* if continue URL is not valid show retry button */}
-					{!continueURLState ? (
-						<Link
-							href="/request_email_verification"
-							className={`w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 block mx-auto my-8 rounded-xl text-[18px]`}
-							id="verify-email-continue-btn">
-							Retry
-						</Link>
-					) : (
-						""
-					)}
+					<Link
+						href={continueURLState}
+						className="w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 mx-auto my-8 rounded-xl text-[18px] hidden"
+						id="verify-email-continue-btn">
+						Continue
+					</Link>
+					<Link
+						href="/request_email_verification"
+						className="w-max px-10 py-[1px] bg-accent hover:bg-primary text-white hover:text-secondary ring-2 ring-gray-400 mx-auto my-8 rounded-xl text-[18px] hidden"
+						id="verify-email-retry-btn">
+						Retry
+					</Link>
 					{/* for screen readers only */}
 					<p
 						role="alert"

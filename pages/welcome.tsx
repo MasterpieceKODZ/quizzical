@@ -18,10 +18,6 @@ const Welcome = () => {
 		const brandImg = document.getElementById("img-app-name");
 		const btnAcceptChallenge = document.getElementById("btn-accept-challenge");
 
-		// read welcome message for - screen readers
-		const welTxtSR: any = document.getElementById("welcome-text-SR");
-		welTxtSR.textContent = "welcome to quizzical";
-
 		// start welcome animation
 		let joinedWelcomeText = "";
 
@@ -34,6 +30,10 @@ const Welcome = () => {
 				dispatch(actionUpdateWelcomeText(joinedWelcomeText));
 			}, index * 170);
 		});
+
+		// read welcome message for - screen readers
+		const welTxtSR: any = document.getElementById("welcome-text-SR");
+		welTxtSR.textContent = "welcome to quizzical";
 
 		// show app name, drop down animation
 		setTimeout(() => {
@@ -87,7 +87,11 @@ const Welcome = () => {
 		// if the user is signed in, navigate to quizroom else show login screen
 		if (user) {
 			if (user.emailVerified) {
-				router.push("/quizroom");
+				if (user.displayName) {
+					router.push("/quizroom");
+				} else {
+					router.push("/signup_2");
+				}
 			} else {
 				router.push("/request_email_verification");
 			}

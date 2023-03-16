@@ -49,12 +49,8 @@ export default async function createUserAccount() {
 					showFormInfo(
 						`An email verification link has been sent to ${userCredentials.user.email}, you must verify your email to proceed, click the link in the email to verify your email address`,
 						"signup",
-						"info",
+						"success",
 					);
-					// dismiss message after 8 secs
-					setTimeout(() => {
-						hideFormInfo("signup");
-					}, 8000);
 				})
 				.catch((err: Error) => {
 					hideLoadingSpinner();
@@ -62,22 +58,22 @@ export default async function createUserAccount() {
 						showFormInfo(
 							"There is already an account with this email address.",
 							"signup",
-							"info",
+							"error",
 						);
-						// dismiss message after 4 secs
+						// dismiss message after 5 secs
 						setTimeout(() => {
 							hideFormInfo("signup");
-						}, 4000);
+						}, 5000);
 					} else {
 						showFormInfo(
 							"An error occured while trying to create your account, please check your network and try again",
 							"signup",
 							"error",
 						);
-						// dismiss message after 6 secs
+						// dismiss message after 8 secs
 						setTimeout(() => {
 							hideFormInfo("signup");
-						}, 6000);
+						}, 8000);
 					}
 				});
 		} else {
@@ -88,7 +84,7 @@ export default async function createUserAccount() {
 			);
 			setTimeout(() => {
 				hideFormInfo("signup");
-			}, 5000);
+			}, 7000);
 		}
 	} else {
 		showFormInfo(
@@ -99,7 +95,7 @@ export default async function createUserAccount() {
 
 		setTimeout(() => {
 			hideFormInfo("signup");
-		}, 5000);
+		}, 7000);
 	}
 
 	hideLoadingSpinner();
@@ -113,15 +109,12 @@ export async function checkSignUpPasswordMatch() {
 
 	if (signUpPassword.value != confirmSignUpPassword.value) {
 		showFormInfo("passwords do not match", "signup", "error");
-		setTimeout(() => {
-			hideFormInfo("signup");
-		}, 3000);
 	} else {
 		if (confirmSignUpPassword.value) {
-			showFormInfo("passwords are a match", "signup", "info");
+			showFormInfo("passwords are a match", "signup", "success");
 			setTimeout(() => {
 				hideFormInfo("signup");
-			}, 2000);
+			}, 5000);
 		}
 	}
 }

@@ -17,7 +17,7 @@ export async function handelForgotPassword() {
 				showFormInfo(
 					`A password reset email has been sent to ${emailValue}, follow the instruction in the email to reset your password`,
 					"login",
-					"info",
+					"success",
 				);
 				setTimeout(() => {
 					hideFormInfo("login");
@@ -43,7 +43,7 @@ export async function handelForgotPassword() {
 					);
 					setTimeout(() => {
 						hideFormInfo("login");
-					}, 7000);
+					}, 10000);
 				}
 			});
 	} else {
