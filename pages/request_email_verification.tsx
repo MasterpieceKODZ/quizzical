@@ -30,6 +30,7 @@ const RequestEmailVerify = () => {
 		return () => {
 			unsubscribe();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<div className="w-[100vw] h-[100vh] flex justify-center items-center bg-blue-100">

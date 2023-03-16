@@ -48,6 +48,7 @@ const SignUp2 = () => {
 		return () => {
 			unsubscribe();
 		};
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<div className="signup-root h-[100vh] w-[100vw] overflow-hidden relative bg-slate-200">

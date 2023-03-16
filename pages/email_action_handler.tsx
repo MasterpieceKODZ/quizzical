@@ -131,6 +131,7 @@ const PasswordReset = () => {
 				router.push("/login");
 				break;
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
