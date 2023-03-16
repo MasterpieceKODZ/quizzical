@@ -3,7 +3,7 @@ import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { hideFormInfo, showFormInfo } from "./showHideFormInfo";
 import { reduceBase64CodeSize } from "./reduceBase64Size";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import { User, updateProfile } from "firebase/auth";
 import type { NextRouter } from "next/router";
 import { hideLoadingSpinner, showLoadingSpinner } from "./showHideSpinner";
 
@@ -20,7 +20,7 @@ export async function updateUserData(router: NextRouter) {
 		if (!nonAlphaNumRegex.test(displayName)) {
 			const usernameIsAvail = await isUsernameAvailable(displayName);
 			if (usernameIsAvail) {
-				const avatar = document.querySelector(".active");
+				const avatar: any = document.querySelector(".active");
 				// compel user to choose an avatar
 				if (avatar) {
 					const avaCl = avatar.classList;
@@ -35,7 +35,7 @@ export async function updateUserData(router: NextRouter) {
 
 						const context = imgCanvas.getContext("2d");
 
-						context.drawImage(avatar, 0, 0, avatar.width, avatar.height);
+						context?.drawImage(avatar, 0, 0, avatar.width, avatar.height);
 
 						const avatarBase64 = context?.canvas.toDataURL("image/png");
 
@@ -47,7 +47,10 @@ export async function updateUserData(router: NextRouter) {
 
 						// upload image base64
 						uploadString(
-							ref(appStorage, `profilePictures/${appAuth.currentUser.uid}.png`),
+							ref(
+								appStorage,
+								`profilePictures/${appAuth.currentUser?.uid}.png`,
+							),
 							compressdAvatarBase64,
 							"data_url",
 						)
@@ -56,35 +59,36 @@ export async function updateUserData(router: NextRouter) {
 								getDownloadURL(snapshot.ref)
 									.then((res) => {
 										// update current user data
-										updateProfile(appAuth.currentUser, {
+										updateProfile(appAuth.currentUser as User, {
 											displayName,
 											photoURL: res,
 										})
 											.then((r) => {
 												// upload user data to firestore database
-												setDoc(doc(AppDB, "users", appAuth.currentUser.uid), {
-													imgURL: appAuth.currentUser.photoURL,
-													username: appAuth.currentUser.displayName,
-													email: appAuth.currentUser.email,
-													gamerank: 0,
-													highscore: 0,
-												})
-													.then((res) => {
-														// navigate the user to quizroom on successful data upload
-														hideLoadingSpinner();
-														router.push("/quizroom");
+												if (appAuth.currentUser)
+													setDoc(doc(AppDB, "users", appAuth.currentUser.uid), {
+														imgURL: appAuth.currentUser.photoURL,
+														username: appAuth.currentUser.displayName,
+														email: appAuth.currentUser.email,
+														gamerank: 0,
+														highscore: 0,
 													})
-													.catch((err) => {
-														hideLoadingSpinner();
-														showFormInfo(
-															"Unable to update user info, it could be your network.",
-															"signup2",
-															"error",
-														);
-														setTimeout(() => {
-															hideFormInfo("signup2");
-														}, 5000);
-													});
+														.then((res) => {
+															// navigate the user to quizroom on successful data upload
+															hideLoadingSpinner();
+															router.push("/quizroom");
+														})
+														.catch((err) => {
+															hideLoadingSpinner();
+															showFormInfo(
+																"Unable to update user info, it could be your network.",
+																"signup2",
+																"error",
+															);
+															setTimeout(() => {
+																hideFormInfo("signup2");
+															}, 5000);
+														});
 											})
 											.catch((err) => {
 												hideLoadingSpinner();
@@ -124,39 +128,60 @@ export async function updateUserData(router: NextRouter) {
 					}
 					// if user uploaded a custom image
 					else if (avaCl.contains("upload-photo")) {
-						const imgPrev = document.getElementById("img-upload-preview");
+						const imgPrev: any = document.getElementById("img-upload-preview");
 
 						// retrieve image base64 from the preview image src
 						const customImgBase64 = imgPrev.src;
 
 						// upload image base64
-						uploadString(
-							ref(appStorage, `profilePictures/${appAuth.currentUser.uid}.png`),
-							customImgBase64,
-							"data_url",
-						)
-							.then((snapshot) => {
-								// retrieve image download url
-								getDownloadURL(snapshot.ref)
-									.then((res) => {
-										// update current user data
-										updateProfile(appAuth.currentUser, {
-											displayName,
-											photoURL: res,
-										})
-											.then((r) => {
-												// upload user data to firestore database
-												setDoc(doc(AppDB, "users", appAuth.currentUser.uid), {
-													imgURL: appAuth.currentUser.photoURL,
-													username: appAuth.currentUser.displayName,
-													email: appAuth.currentUser.email,
-													gamerank: 0,
-													highscore: 0,
+						if (appAuth.currentUser)
+							uploadString(
+								ref(
+									appStorage,
+									`profilePictures/${appAuth.currentUser.uid}.png`,
+								),
+								customImgBase64,
+								"data_url",
+							)
+								.then((snapshot) => {
+									// retrieve image download url
+									getDownloadURL(snapshot.ref)
+										.then((res) => {
+											// update current user data
+											if (appAuth.currentUser)
+												updateProfile(appAuth.currentUser, {
+													displayName,
+													photoURL: res,
 												})
-													.then((res) => {
-														// navigate the user to quizroom on successful data upload
-														hideLoadingSpinner();
-														router.push("/quizroom");
+													.then((r) => {
+														// upload user data to firestore database
+														if (appAuth.currentUser)
+															setDoc(
+																doc(AppDB, "users", appAuth.currentUser.uid),
+																{
+																	imgURL: appAuth.currentUser.photoURL,
+																	username: appAuth.currentUser.displayName,
+																	email: appAuth.currentUser.email,
+																	gamerank: 0,
+																	highscore: 0,
+																},
+															)
+																.then((res) => {
+																	// navigate the user to quizroom on successful data upload
+																	hideLoadingSpinner();
+																	router.push("/quizroom");
+																})
+																.catch((err) => {
+																	hideLoadingSpinner();
+																	showFormInfo(
+																		"Unable to update user info, it could be your network.",
+																		"signup2",
+																		"error",
+																	);
+																	setTimeout(() => {
+																		hideFormInfo("signup2");
+																	}, 4000);
+																});
 													})
 													.catch((err) => {
 														hideLoadingSpinner();
@@ -169,42 +194,30 @@ export async function updateUserData(router: NextRouter) {
 															hideFormInfo("signup2");
 														}, 4000);
 													});
-											})
-											.catch((err) => {
-												hideLoadingSpinner();
-												showFormInfo(
-													"Unable to update user info, it could be your network.",
-													"signup2",
-													"error",
-												);
-												setTimeout(() => {
-													hideFormInfo("signup2");
-												}, 4000);
-											});
-									})
-									.catch((err) => {
-										hideLoadingSpinner();
-										showFormInfo(
-											"Image upload failed,check your network and try again.",
-											"signup2",
-											"error",
-										);
-										setTimeout(() => {
-											hideFormInfo("signup2");
-										}, 4000);
-									});
-							})
-							.catch((err) => {
-								hideLoadingSpinner();
-								showFormInfo(
-									"Image upload failed,check your network and try again.",
-									"signup2",
-									"error",
-								);
-								setTimeout(() => {
-									hideFormInfo("signup2");
-								}, 4000);
-							});
+										})
+										.catch((err) => {
+											hideLoadingSpinner();
+											showFormInfo(
+												"Image upload failed,check your network and try again.",
+												"signup2",
+												"error",
+											);
+											setTimeout(() => {
+												hideFormInfo("signup2");
+											}, 4000);
+										});
+								})
+								.catch((err) => {
+									hideLoadingSpinner();
+									showFormInfo(
+										"Image upload failed,check your network and try again.",
+										"signup2",
+										"error",
+									);
+									setTimeout(() => {
+										hideFormInfo("signup2");
+									}, 4000);
+								});
 					}
 				} else {
 					hideLoadingSpinner();
@@ -240,12 +253,12 @@ export async function updateUserData(router: NextRouter) {
 
 // displayname input on change listener function
 export async function displayNameOnChange(e: any) {
-	const dnError = document.getElementById("username-error");
+	const dnError: any = document.getElementById("username-error");
 	dnError.textContent = "";
 	dnError?.classList.add("hidden");
 
 	const nonAlphaNumRegex = new RegExp(/\W/, "gi");
-	const displayNameError = document.getElementById("username-error");
+	const displayNameError: any = document.getElementById("username-error");
 
 	if (nonAlphaNumRegex.test(e.target.value)) {
 		displayNameError?.classList.remove("hidden");

@@ -15,7 +15,7 @@ export async function closeImageCropperModal(imageCropper: Cropper) {
 	imgCropperModal?.classList.remove("flex");
 	imgCropperModal?.classList.add("hidden");
 	// clear image input value
-	const fileInput = document.getElementById("profile-pic-file");
+	const fileInput: any = document.getElementById("profile-pic-file");
 	fileInput.value = "";
 	hideLoadingSpinner();
 }

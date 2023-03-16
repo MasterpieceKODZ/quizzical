@@ -25,13 +25,13 @@ async function compressImage(base64: string, fileType: string) {
 	let newBase64;
 
 	await new Promise((resolve, reject) => {
-		image.onload = (e) => {
+		image.onload = (e: any) => {
 			const width = e.target.width - Math.floor((10 / 100) * e.target.width);
 			const height = e.target.height - Math.floor((10 / 100) * e.target.height);
 			const canvas = document.createElement("canvas");
 			canvas.width = width;
 			canvas.height = height;
-			const context = canvas.getContext("2d");
+			const context: any = canvas.getContext("2d");
 
 			context.drawImage(e.target, 0, 0, width, height);
 

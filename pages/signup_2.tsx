@@ -17,8 +17,8 @@ import { useRouter } from "next/router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 const SignUp2 = () => {
 	const router = useRouter();
-	let imageCropper;
-	let fileType;
+	let imageCropper: any;
+	let fileType: any;
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
 			// check if the user is signed in
@@ -48,7 +48,7 @@ const SignUp2 = () => {
 		return () => {
 			unsubscribe();
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<div className="signup-root h-[100vh] w-[100vw] overflow-hidden relative bg-slate-200">
@@ -202,7 +202,8 @@ const SignUp2 = () => {
 								aria-label="select custom avatar"
 								className="w-full h-full absolute top-0 left-0 overflow-hidden bg-[#9da9b363]"
 								onClickCapture={(e) => {
-									const imgPrev = document.getElementById("img-upload-preview");
+									const imgPrev: any =
+										document.getElementById("img-upload-preview");
 									const activeAvatar = document.querySelector(".active");
 
 									if (activeAvatar) {
@@ -211,7 +212,7 @@ const SignUp2 = () => {
 
 									// if custom image has not been selected, select new custom  image, else set selected image preview as active avatar
 
-									if (imgPrev.src.endsWith("/upload-img.jpg")) {
+									if (imgPrev?.src.endsWith("/upload-img.jpg")) {
 										uploadImage();
 									} else {
 										document
@@ -237,7 +238,7 @@ const SignUp2 = () => {
 							accept=".jpg, .jpeg, .png, .webp"
 							id="profile-pic-file"
 							className="w-0 h-0 overflow-hidden"
-							onChange={async (e) => {
+							onChange={async (e: any) => {
 								// render the selected image on the image cropper modal
 								await handelImageFileSelection(e).then((res) => {
 									imageCropper = res;
