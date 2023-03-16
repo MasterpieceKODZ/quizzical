@@ -1,21 +1,35 @@
 import { appAuth } from "@/firebase.config";
-import { sendEmailVerification } from "firebase/auth";
+import { onAuthStateChanged, sendEmailVerification } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 const RequestEmailVerify = () => {
 	const router = useRouter();
 	useEffect(() => {
-		const user = appAuth.currentUser;
+		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
+			// refresh user authentication data
+			user?.reload();
 
-		if (user) {
-			if (user.emailVerified) {
-				router.push("/quizroom");
+			// if user is signed in check the user email verification status
+			if (user) {
+				// if user is verified check if the user has set display name, if the user email is not verified redirect user to request_email_verification page
+				if (user.emailVerified) {
+					// if user has set a display name redirect the user to quizroom else redirect the user to signup_2 page to set a display name
+					if (user.displayName) {
+						router.push("/quizroom");
+					} else {
+						router.push("/signup_2");
+					}
+				} else {
+					document.getElementById("retry-btn")?.focus();
+				}
+			} else {
+				router.push("/login");
 			}
-		} else {
-			alert("please login first before requesting email verification.");
-			router.push("/login");
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		});
+
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 	return (
 		<div className="w-[100vw] h-[100vh] flex justify-center items-center bg-blue-100">
@@ -23,27 +37,36 @@ const RequestEmailVerify = () => {
 				<p
 					id="email-link-status"
 					role="alert"
-					className=" mx-2 text-center text-slate-700 font-specialElite">
-					You must verify your email address to continue, click the button below
-					to get an email verification link
-				</p>
+					className=" mx-2 text-center text-slate-700 font-specialElite"></p>
 				<button
+					id="retry-btn"
 					type="button"
 					className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] relative overflow-hidden"
 					onClick={(e) => {
 						// send new verification email link
 						const user = appAuth.currentUser;
 						if (user) {
-							sendEmailVerification(user, { url: "/signup_2" })
+							sendEmailVerification(user, {
+								url: "http://localhost:3000/signup_2",
+							})
 								.then((res) => {
 									const eLinkStat: any =
 										document.getElementById("email-link-status");
 									eLinkStat.textContent = `an email verification link has been sent to ${user.email}, verify your email address to proceed.`;
 								})
-								.catch((err) => {
-									alert(
-										"An error occured while trying to send the email verification link, check your network and try again",
-									);
+								.catch((err: Error) => {
+									if (
+										err.message == "Firebase: Error (auth/too-many-requests)."
+									) {
+										const eLinkStat: any =
+											document.getElementById("email-link-status");
+										eLinkStat.textContent =
+											"An email verification link has already been sent to this email address, check your mailbox for the message.";
+									} else {
+										alert(
+											"An error occured while trying to send the email verification link, check your network and try again",
+										);
+									}
 								});
 						} else {
 							alert(

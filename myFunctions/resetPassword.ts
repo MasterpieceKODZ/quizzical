@@ -31,7 +31,15 @@ export async function resetUserPassword(
 					signInWithEmailAndPassword(appAuth, email, newPwdVal)
 						.then((credential) => {
 							hideLoadingSpinner();
-							router.push("/quizroom");
+							if (credential.user.emailVerified) {
+								if (credential.user.displayName) {
+									router.push("/quizroom");
+								} else {
+									router.push("/signup_2");
+								}
+							} else {
+								router.push("/request_email_verification");
+							}
 						})
 						.catch((err) => {
 							alert(

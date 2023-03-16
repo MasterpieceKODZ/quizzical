@@ -8,11 +8,35 @@ import createUserAccount, {
 } from "@/myFunctions/userSignUp";
 import { validatePasswordOnChange } from "@/myFunctions/validatePassword";
 import { useEffect } from "react";
+import { appAuth } from "@/firebase.config";
+import { useRouter } from "next/router";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const SignIn = () => {
+	const router = useRouter();
 	useEffect(() => {
-		const pageNameLogin: any = document.getElementById("page-name-SR");
-		pageNameLogin.textContent = "Create Account";
+		const unsubscribe = onAuthStateChanged(appAuth, (user) => {
+			// refresh user authentication data
+			user?.reload();
+
+			// if user is signed in check the user email verification status
+			if (user) {
+				// if user is verified check if the user has set display name, if the user email is not verified redirect user to request_email_verification page
+				if (user.emailVerified) {
+					// if user has set a display name redirect the user to quizroom else redirect the user to signup_2 page to set a display name
+					if (user.displayName) {
+						router.push("/quizroom");
+					} else {
+						router.push("/signup_2");
+					}
+				}
+			} else {
+				// annouce page name with screen reader
+				const pageNameLogin: any = document.getElementById("page-name-SR");
+				pageNameLogin.textContent = "Create Account";
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -59,7 +83,7 @@ const SignIn = () => {
 					</div>
 					<div className=" w-full mt-6">
 						<label
-							htmlFor="#inp-password-signup"
+							htmlFor="inp-password-signup"
 							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
 							Password
 						</label>
@@ -107,7 +131,7 @@ const SignIn = () => {
 							</p>
 						</div>
 						<label
-							htmlFor="#inp-confirm-password-signup"
+							htmlFor="inp-confirm-password-signup"
 							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
 							Confirm Password
 						</label>
@@ -125,7 +149,7 @@ const SignIn = () => {
 							{/* secondary password toggle */}
 							<button
 								type="button"
-								aria-label="password toggle"
+								aria-label="confirm password toggle"
 								className="fas fa-eye ml-1 w-max h-max bg-transparent border-0"
 								onClick={(e) => showHidePassword(e, "signup")}></button>
 						</div>
@@ -148,7 +172,7 @@ const SignIn = () => {
 					<p
 						role="alert"
 						id="signup-error-console"
-						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-5 rounded-md ring-1 hidden"></p>
+						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-5 rounded-md hidden"></p>
 					<button
 						type="submit"
 						className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] relative overflow-hidden">
@@ -158,6 +182,13 @@ const SignIn = () => {
 					</button>
 				</form>
 			</div>
+			<button
+				className="absolute top-0 left-0"
+				onClick={(e) => {
+					signOut(appAuth);
+				}}>
+				Sign Out
+			</button>
 			<BallSpinnerModal />
 		</div>
 	);
