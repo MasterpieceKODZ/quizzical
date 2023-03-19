@@ -24,10 +24,10 @@ module.exports = {
 			},
 			colors: {
 				primary: "#191970ff",
-				secondary: "#ffdd00fe",
+				secondary: "#ffd100ff",
 				accent: colors.emerald["400"],
-				correct: colors.lime["300"],
-				wrong: colors.red["400"],
+				correct: colors.lime["200"],
+				wrong: colors.red["300"],
 			},
 			fontFamily: {
 				julee: "Julee, cursive",
