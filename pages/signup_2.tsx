@@ -89,6 +89,7 @@ const SignUp2 = () => {
 					<p className="text-center">Choose An Avatar</p>
 					<div className="p-2 flex flex-wrap items-center justify-evenly">
 						<img
+							role="button"
 							src="/avatar-1.png"
 							tabIndex={0}
 							alt="avatar 1"
@@ -98,6 +99,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-2.png"
 							tabIndex={0}
 							alt="avatar 2"
@@ -107,6 +109,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-3.png"
 							tabIndex={0}
 							alt="avatar 3"
@@ -116,6 +119,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-4.png"
 							tabIndex={0}
 							alt="avatar 4"
@@ -125,6 +129,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-5.png"
 							tabIndex={0}
 							alt="avatar 5"
@@ -134,6 +139,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-6.png"
 							tabIndex={0}
 							alt="avatar 6"
@@ -143,6 +149,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-7.png"
 							tabIndex={0}
 							alt="avatar 7"
@@ -152,6 +159,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							tabIndex={0}
 							src="/avatar-8.png"
 							alt="avatar 8"
@@ -161,6 +169,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-9.png"
 							tabIndex={0}
 							alt="avatar 9"
@@ -170,6 +179,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-10.png"
 							tabIndex={0}
 							alt="avatar 10"
@@ -179,6 +189,7 @@ const SignUp2 = () => {
 							}}
 						/>
 						<img
+							role="button"
 							src="/avatar-11.png"
 							tabIndex={0}
 							alt="avatar 11"

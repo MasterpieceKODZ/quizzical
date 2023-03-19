@@ -8,6 +8,12 @@
 		box-sizing: border-box;
 		margin: 0;
 	}
+
+	ol {
+		list-style: upper-roman !important;
+		list-style-type: upper-roman !important;
+		list-style-position: inside !important;
+	}
 }
 
 .spinner-modal {
@@ -15,7 +21,8 @@
 }
 
 input[type="email"],
-#inp-display-name {
+#inp-display-name,
+#inp-new-display-name {
 	box-shadow: 0px 0px 3px 1px black;
 	outline: none !important;
 }
@@ -66,4 +73,114 @@ input[type="email"],
 
 .cropper-image-cont::-webkit-scrollbar {
 	width: 0px;
+}
+
+#select-category {
+	box-shadow: 0px 0px 4px #ffd100ff;
+}
+
+.category-options-wrapper {
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	display: none !important;
+	opacity: 0;
+	transition: all 0.8s linear 1s;
+}
+
+.category-options-wrapper::-webkit-scrollbar {
+	width: 0px;
+}
+
+.option-check {
+	display: none !important;
+}
+
+.category-active .option-check {
+	display: inline !important;
+}
+
+.option-host-cl.open .category-options-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+#category-option-host:hover .category-options-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+/* difficulty */
+
+#select-difficulty {
+	box-shadow: 0px 0px 4px #ffd100ff;
+}
+
+.difficulty-options-wrapper {
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	display: none !important;
+	opacity: 0;
+	transition: all 0.8s linear 1s;
+}
+
+.difficulty-options-wrapper::-webkit-scrollbar {
+	width: 0px;
+}
+
+.option-check {
+	display: none !important;
+}
+
+.difficulty-active .option-check {
+	display: inline !important;
+}
+
+.option-host-cl.open .difficulty-options-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+#difficulty-option-host:hover .difficulty-options-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+#question-text-host {
+	scrollbar-color: #65a30d;
+
+	scrollbar-width: thin;
+}
+
+#question-text-host::-webkit-scrollbar {
+	width: 4px;
+}
+
+#question-text-host::-webkit-scrollbar-thumb {
+	width: 4px;
+	border-radius: 5px;
+	background-color: #65a30d;
+}
+
+.leaderboard-menuitem {
+	box-shadow: 0px 0px 2px gray;
+}
+
+.leaderboard-wrapper {
+	display: none !important;
+	opacity: 0;
+	transition: all 0.8s linear 1s;
+}
+
+.leaderboard-host-cl:hover .leaderboard-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+.leaderboard-host-cl.open .leaderboard-wrapper {
+	display: block !important;
+	opacity: 1;
+}
+
+#leaderboard-icon {
+	box-shadow: 0px 0px 3px grey !important;
 }
