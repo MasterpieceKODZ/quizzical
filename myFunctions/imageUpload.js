@@ -68,7 +68,7 @@ export async function cropImage(cropper, imageType) {
 	showLoadingSpinner();
 	const croppedImage = cropper.getCroppedCanvas().toDataURL(imageType);
 
-	const reducedBase64 = await reduceBase64CodeSize(croppedImage, 20, imageType);
+	const reducedBase64 = await reduceBase64CodeSize(croppedImage, 30, imageType);
 
 	document.getElementById("img-upload-preview").src = reducedBase64;
 

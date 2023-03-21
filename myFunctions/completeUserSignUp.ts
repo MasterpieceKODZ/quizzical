@@ -41,7 +41,7 @@ export async function updateUserData(router: NextRouter) {
 
 						const compressdAvatarBase64 = await reduceBase64CodeSize(
 							avatarBase64 as string,
-							15,
+							30,
 							"image/png",
 						);
 
@@ -271,7 +271,7 @@ export async function displayNameOnChange(e: any) {
 }
 
 // check if username has been taken by another user
-async function isUsernameAvailable(username: string) {
+export async function isUsernameAvailable(username: string) {
 	const usersDocs = await getDocs(collection(AppDB, "users"));
 
 	let nameIsAvailable = true;

@@ -2,7 +2,7 @@ const BallSpinnerModal = () => {
 	return (
 		<div
 			id="login-spinner"
-			className="absolute top-0 left-0 right-0 bottom-0 z-50 justify-center items-center w-full h-full spinner-modal hidden">
+			className="absolute top-0 left-0 right-0 bottom-0 z-[100] justify-center items-center w-full h-full spinner-modal hidden">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="-50 -50 100 100"

@@ -170,11 +170,11 @@ input[type="email"],
 	opacity: 0;
 	transition: all 0.8s linear 1s;
 }
-
+/* 
 .leaderboard-host-cl:hover .leaderboard-wrapper {
 	display: block !important;
 	opacity: 1;
-}
+} */
 
 .leaderboard-host-cl.open .leaderboard-wrapper {
 	display: block !important;

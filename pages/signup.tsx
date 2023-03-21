@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { appAuth } from "@/firebase.config";
 import { useRouter } from "next/router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import Link from "next/link";
 
 const SignIn = () => {
 	const router = useRouter();
@@ -182,13 +183,17 @@ const SignIn = () => {
 					</button>
 				</form>
 			</div>
-			<button
-				className="absolute top-0 left-0"
-				onClick={(e) => {
-					signOut(appAuth);
-				}}>
-				Sign Out
-			</button>
+			<p
+				id="no-acct"
+				tabIndex={0}
+				className="text-[14] mobileL:text-[18px] mobileXL:text-[22px] text-center absolute bottom-12 tallS:bottom-16 laptopS:!bottom-3 invisible short:visible w-max max-h-max left-[50%] translate-x-[-50%]">
+				I have an account...?{" "}
+				<Link
+					href="/login"
+					className=" text-blue-600">
+					Login
+				</Link>
+			</p>
 			<BallSpinnerModal />
 		</div>
 	);

@@ -54,6 +54,7 @@ export default async function createUserAccount() {
 				})
 				.catch((err: Error) => {
 					hideLoadingSpinner();
+					hideLoadingSpinner();
 					if (err.message == "Firebase: Error (auth/email-already-in-use).") {
 						showFormInfo(
 							"There is already an account with this email address.",
@@ -77,6 +78,7 @@ export default async function createUserAccount() {
 					}
 				});
 		} else {
+			hideLoadingSpinner();
 			showFormInfo(
 				"passwords do not match, check passwords and try again.",
 				"signup",
@@ -87,6 +89,7 @@ export default async function createUserAccount() {
 			}, 7000);
 		}
 	} else {
+		hideLoadingSpinner();
 		showFormInfo(
 			"invalid email or password, please check and try again,",
 			"signup",
@@ -97,8 +100,6 @@ export default async function createUserAccount() {
 			hideFormInfo("signup");
 		}, 7000);
 	}
-
-	hideLoadingSpinner();
 }
 
 export async function checkSignUpPasswordMatch() {
