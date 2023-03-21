@@ -51,7 +51,7 @@ const SignUp2 = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
-		<div className="signup-root h-[100vh] w-[100vw] overflow-hidden relative bg-slate-200">
+		<div className="signup-2-root h-[100vh] w-[100vw] overflow-hidden relative bg-slate-200">
 			<div className="h-[100vh] overflow-y-auto">
 				<div className="flex items-center justify-center py-3">
 					<img
@@ -204,7 +204,7 @@ const SignUp2 = () => {
 							<img
 								id="img-upload-preview"
 								src="/custom_img_PH.png"
-								alt="avatar 11"
+								alt="custom avatar"
 								className="w-full h-full object-cover"
 							/>
 							<div
@@ -223,7 +223,7 @@ const SignUp2 = () => {
 
 									// if custom image has not been selected, select new custom  image, else set selected image preview as active avatar
 
-									if (imgPrev?.src.endsWith("/upload-img.jpg")) {
+									if (imgPrev?.src.endsWith("custom_img_PH.png")) {
 										uploadImage();
 									} else {
 										document
@@ -269,6 +269,7 @@ const SignUp2 = () => {
 					id="page-name-SR"
 					className="w-0 h-0 overflow-hidden"></p>
 				<button
+					aria-label=""
 					type="button"
 					className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] block mx-auto mb-6 relative overflow-hidden"
 					onClick={(e) => updateUserData(router)}>
@@ -319,13 +320,6 @@ const SignUp2 = () => {
 					</button>
 				</div>
 			</div>
-			<button
-				className="absolute top-0 left-0"
-				onClick={(e) => {
-					signOut(appAuth);
-				}}>
-				Sign Out
-			</button>
 
 			<BallSpinnerModal />
 		</div>

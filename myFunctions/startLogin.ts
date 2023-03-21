@@ -19,6 +19,7 @@ export default async function initiateLoginProcess(router: NextRouter) {
 	if (passwordIsValid) {
 		loginUserAccount(emailValue, passwordInput.value.trim(), router);
 	} else {
+		hideLoadingSpinner();
 		showFormInfo(
 			"Your password does not pass the minimum password requirements, change password and try again.",
 			"login",
@@ -28,6 +29,4 @@ export default async function initiateLoginProcess(router: NextRouter) {
 			hideFormInfo("login");
 		}, 6000);
 	}
-
-	hideLoadingSpinner();
 }

@@ -2,6 +2,7 @@ import { appAuth } from "@/firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { hideFormInfo, showFormInfo } from "./showHideFormInfo";
 import { NextRouter } from "next/router";
+import { hideLoadingSpinner } from "./showHideSpinner";
 
 export default async function loginUserAccount(
 	email: string,
@@ -10,6 +11,7 @@ export default async function loginUserAccount(
 ) {
 	signInWithEmailAndPassword(appAuth, email, password)
 		.then((credential) => {
+			hideLoadingSpinner();
 			if (credential.user.emailVerified) {
 				if (credential.user.displayName) {
 					router.push("/quizroom");
@@ -21,6 +23,7 @@ export default async function loginUserAccount(
 			}
 		})
 		.catch((err: Error) => {
+			hideLoadingSpinner();
 			if (err.message == "Firebase: Error (auth/user-not-found).") {
 				showFormInfo(
 					"account does not exist, check email and try again",
