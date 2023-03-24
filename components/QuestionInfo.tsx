@@ -1,10 +1,12 @@
-const QuestionInfo = () => {
+const QuestionInfo = ({ info }: any) => {
 	return (
 		<div className="absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
 			<p
+				role="alert"
+				aria-atomic="true"
 				id="question-info-text"
 				className="text-center px-2 text-lime-600">
-				Unable to fetch questions, please check your network and try again
+				{info}
 			</p>
 		</div>
 	);

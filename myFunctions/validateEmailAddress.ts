@@ -6,8 +6,6 @@ export async function validateEmailInputed(
 	email: string,
 	action: string,
 ): Promise<object> {
-	let isValid: string;
-
 	return new Promise(async (resolve, reject) => {
 		// Abstract email validation API request
 		await fetch(
