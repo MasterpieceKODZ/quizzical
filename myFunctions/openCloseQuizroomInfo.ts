@@ -13,6 +13,13 @@ export async function openInfoModal(title: string, body: string, type: string) {
 	infoTitle.textContent = title;
 	const infoBody: any = document.getElementById("quizroom-info-modal-body");
 	infoBody.textContent = body;
+
+	const btnRestart = document.getElementById("btn-restart");
+	if (title) {
+		btnRestart?.classList.remove("hidden");
+	} else {
+		btnRestart?.classList.add("hidden");
+	}
 }
 
 export async function closeInfoModal() {

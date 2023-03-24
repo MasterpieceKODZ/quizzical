@@ -25,12 +25,12 @@ export default async function createUserAccount() {
 	const passwordValue = signUpPassword.value;
 	const emailValue = signUpEmail.value;
 
-	let emailIsValid: any = true;
+	let emailIsValid: any;
 
-	// check email validity
-	//await getEmailValidationResponse(emailValue, "signup").then((res) => {
-	// 	emailIsValid = res;
-	// });
+	//check email validity
+	await getEmailValidationResponse(emailValue, "signup").then((res) => {
+		emailIsValid = res;
+	});
 
 	// check password validity by requirements
 	let passwordIsValid = validatePasswordOnSubmit("signup");
@@ -43,7 +43,7 @@ export default async function createUserAccount() {
 				.then((userCredentials: UserCredential) => {
 					// verifyy user email address
 					sendEmailVerification(userCredentials.user, {
-						url: "http://localhost:3000/signup_2",
+						url: "https://quizzical-masterpiecekodz.vercel.app/signup_2",
 					});
 					hideLoadingSpinner();
 					showFormInfo(

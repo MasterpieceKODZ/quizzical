@@ -48,7 +48,7 @@ const RequestEmailVerify = () => {
 						const user = appAuth.currentUser;
 						if (user) {
 							sendEmailVerification(user, {
-								url: "http://localhost:3000/signup_2",
+								url: "https://quizzical-masterpiecekodz.vercel.app/signup_2",
 							})
 								.then((res) => {
 									const eLinkStat: any =

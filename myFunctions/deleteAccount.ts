@@ -65,8 +65,6 @@ export async function deleteUserAccount() {
 											setTimeout(() => {
 												closeInfoModal();
 											}, 3000);
-											console.log("account deletion failed");
-											console.log(e.message);
 										});
 								})
 								.catch((e: Error) => {
@@ -79,8 +77,6 @@ export async function deleteUserAccount() {
 									setTimeout(() => {
 										closeInfoModal();
 									}, 3000);
-									console.log("account deletion failed");
-									console.log(e.message);
 								});
 						})
 						.catch((e: Error) => {
@@ -93,8 +89,6 @@ export async function deleteUserAccount() {
 							setTimeout(() => {
 								closeInfoModal();
 							}, 3000);
-							console.log("account deletion failed");
-							console.log(e.message);
 						});
 				})
 				.catch((e: Error) => {
@@ -118,9 +112,6 @@ export async function deleteUserAccount() {
 							closeInfoModal();
 						}, 3000);
 					}
-					console.log("re-authentication failed");
-
-					console.log(e.message);
 				});
 		}
 	} else {

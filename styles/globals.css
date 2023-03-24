@@ -170,12 +170,6 @@ input[type="email"],
 	opacity: 0;
 	transition: all 0.8s linear 1s;
 }
-/* 
-.leaderboard-host-cl:hover .leaderboard-wrapper {
-	display: block !important;
-	opacity: 1;
-} */
-
 .leaderboard-host-cl.open .leaderboard-wrapper {
 	display: block !important;
 	opacity: 1;
@@ -183,4 +177,23 @@ input[type="email"],
 
 #leaderboard-icon {
 	box-shadow: 0px 0px 3px grey !important;
+}
+
+#answer-options {
+	scrollbar-color: #65a30d;
+	scrollbar-width: thin;
+}
+
+#answer-options::-webkit-scrollbar {
+	width: 4px;
+}
+
+#answer-options::-webkit-scrollbar-thumb {
+	width: 4px;
+	border-radius: 5px;
+	background-color: #65a30d;
+}
+
+.active-option {
+	background-color: #d1fa98;
 }

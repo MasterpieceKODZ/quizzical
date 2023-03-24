@@ -26,8 +26,7 @@ module.exports = {
 				primary: "#191970ff",
 				secondary: "#ffd100ff",
 				accent: colors.emerald["400"],
-				correct: colors.lime["200"],
-				wrong: colors.red["300"],
+				selected: colors.lime["200"],
 			},
 			fontFamily: {
 				julee: "Julee, cursive",

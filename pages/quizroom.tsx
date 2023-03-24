@@ -34,13 +34,22 @@ import {
 	editUserName,
 	showDisplayNameEditLayout,
 } from "@/myFunctions/userDisplayName";
-import { doc, getDoc } from "firebase/firestore";
+import {
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	limit,
+	orderBy,
+	query,
+} from "firebase/firestore";
 import {
 	closeInfoModal,
 	openInfoModal,
 } from "@/myFunctions/openCloseQuizroomInfo";
 import {
 	hideLoadingSpinner,
+	hideQuizroomLoadingSpinner,
 	showLoadingSpinner,
 } from "@/myFunctions/showHideSpinner";
 import { showHidePassword } from "@/myFunctions/passwordToggle";
@@ -49,20 +58,36 @@ import {
 	hideDeleteAcctModal,
 	showDeleteAcctModal,
 } from "@/myFunctions/deleteAccount";
+import { selectAnswer } from "@/myFunctions/questionAnswer";
+import { startQuiz, storageAvailable } from "@/myFunctions/initiateQuiz";
+import { NextQuestion } from "../myFunctions/initiateQuiz";
+import { updateDoc } from "firebase/firestore";
 
 const Quizroom = () => {
 	const router = useRouter();
 
 	const [pageReady, setPageReady] = useState(false);
 	const [questionLoading, setQuestionLoading] = useState(false);
-	const [questionInfo, setQuestionInfo] = useState(false);
+	const [questionInfo, setQuestionInfo] = useState(
+		"You have 20 seconds for each question, Click start to begin...",
+	);
 	const [quizInProgress, setQuizInProgress] = useState(false);
+	const [questionsLoaded, setQuestionsLoaded] = useState(false);
+	const [questCategories, setQuestionsCategories] = useState([""]);
+	const [questionOptions, setQuestionOptions] = useState([""]);
+	const [activeQuestion, setActiveQuestion] = useState({} as any);
+	const [questionNumber, setQuestionNumber] = useState(0);
+	const [category, setCategory] = useState("");
+	const [difficulty, setDifficulty] = useState("");
+	const [timeLeft, setTimeLeft] = useState(20);
 	const [showUserProfile, setShowUserProfile] = useState(false);
 	const [showNewPicSelect, setShowNewPicSelect] = useState(false);
-	const [showNewPicCropper, setShowNewPicCropper] = useState(false);
 	const [imgURL, setImgUrl] = useState("");
 	const [username, setUsername] = useState("");
 	const [userData, setUserData] = useState(null as any);
+	const [leaderboardData, setLeaderboardData] = useState([{}]);
+	const [timeInterval, setTimeInterval] = useState(0);
+	const usersRef = collection(AppDB, "users");
 	let imageCropper: any;
 	let fileType: any;
 
@@ -71,6 +96,86 @@ const Quizroom = () => {
 			if (user) {
 				if (user.emailVerified) {
 					if (user.displayName) {
+						// clear sessionStorage
+
+						if (storageAvailable()) {
+							window.sessionStorage.clear();
+
+							// retry unsaved changes
+							const highscore = window.localStorage.getItem(
+								`${appAuth.currentUser?.uid as string}Highscore`,
+							);
+							const gamerank = window.localStorage.getItem(
+								`${appAuth.currentUser?.uid as string}Gamerank`,
+							);
+
+							if (highscore) {
+								// update user high score
+								updateDoc(
+									doc(AppDB, "users", appAuth.currentUser?.uid as string),
+									{
+										highscore,
+									},
+								)
+									.then((r) => {
+										window.localStorage.removeItem(
+											`${appAuth.currentUser?.uid as string}Highscore`,
+										);
+									})
+									.catch((e) => {
+										openInfoModal(
+											"",
+											"we could not save your new highscore to the server, check your network and reload the page to save game result, this data will be lost if you play another game without saving it.",
+											"error",
+										);
+										setTimeout(() => {
+											closeInfoModal();
+										}, 5000);
+
+										window.localStorage.setItem(
+											`${appAuth.currentUser?.uid as string}Highscore`,
+											`${highscore}`,
+										);
+									});
+							}
+
+							if (gamerank) {
+								// update user high score
+								updateDoc(
+									doc(AppDB, "users", appAuth.currentUser?.uid as string),
+									{
+										gamerank,
+									},
+								)
+									.then((r) => {
+										window.localStorage.removeItem(
+											`${appAuth.currentUser?.uid as string}Gamerank`,
+										);
+									})
+									.catch((e) => {
+										openInfoModal(
+											"",
+											"we could not save your new gamerank to the server, check your network and reload the page to save game result, this data will be lost if you play another game without saving it.",
+											"error",
+										);
+										setTimeout(() => {
+											closeInfoModal();
+										}, 5000);
+
+										window.localStorage.setItem(
+											`${appAuth.currentUser?.uid as string}Gamerank`,
+											`${gamerank}`,
+										);
+									});
+							}
+						} else {
+							openInfoModal(
+								"",
+								"This browser appears to not support data persistence to browser storage,if you have disabled it please, enable it to use this app",
+								"error",
+							);
+						}
+
 						setImgUrl(user?.photoURL as string);
 						setUsername(user?.displayName as string);
 
@@ -80,14 +185,57 @@ const Quizroom = () => {
 						getDoc(docRef)
 							.then((snapshot) => {
 								setUserData(snapshot.data() as any);
-								setPageReady(true);
+								// fetch top 5 players by gamerank
+								const q = query(
+									usersRef,
+									orderBy("gamerank", "desc"),
+									limit(5),
+								);
+								getDocs(q)
+									.then((usersSnapshot) => {
+										let leaders: object[] = [];
+
+										usersSnapshot.forEach((doc) => {
+											leaders = [...leaders, doc.data()];
+										});
+
+										setLeaderboardData(leaders);
+
+										// get questions category
+										const xhr = new XMLHttpRequest();
+										xhr.open(
+											"GET",
+											"https://the-trivia-api.com/api/categories",
+											true,
+										);
+										xhr.send();
+
+										xhr.onload = () => {
+											if (xhr.status === 200) {
+												const cateObj = JSON.parse(xhr.responseText);
+												let categories: string[] = Object.keys(cateObj);
+												setQuestionsCategories(categories);
+
+												setPageReady(true);
+											}
+										};
+									})
+									.catch((e) => {
+										openInfoModal(
+											"",
+											"An error occurred while trying to fetch leader board data, it could be your network, please reload the page to retry.",
+											"error",
+										);
+										hideQuizroomLoadingSpinner();
+									});
 							})
 							.catch((e) => {
 								openInfoModal(
 									"",
-									"An error occurred while trying to fetch user data, please reload the page to retry.",
+									"An error occurred while trying to fetch user data, it could be your network, please reload the page to retry.",
 									"error",
 								);
+								hideQuizroomLoadingSpinner();
 							});
 					} else {
 						router.push("/signup_2");
@@ -118,9 +266,12 @@ const Quizroom = () => {
 							/>
 						</div>
 						{/* quiz question options */}
+
 						<div
 							id="quiz-option-host"
-							className="w-full max-w-[450px] mt-2 mx-auto px-1 flex items-center justify-around relative">
+							className={`w-full max-w-[450px] max-h-[36px] mt-2 mx-auto px-1 ${
+								questionsLoaded || questionLoading ? "invisible" : "flex"
+							} items-center justify-around relative`}>
 							{/* questions category */}
 							<div
 								tabIndex={0}
@@ -151,24 +302,18 @@ const Quizroom = () => {
 									aria-label="questions category list"
 									tabIndex={-1}
 									className="absolute top-[100%] left-0 w-max max-h-[300px] overflow-y-auto bg-yellow-100 rounded-lg border-2 border-slate-700 py-4 px-6 category-options-wrapper z-10">
-									<button
-										aria-label="Agriculture"
-										role="menuitem"
-										tabIndex={0}
-										className="w-max mt-2 category-option min-w-[160px] cursor-pointer block text-left font-semibold"
-										onClick={selectQuestionCategory}>
-										Agriculture{" "}
-										<i className="fas fa-check ml-2 option-check"></i>
-									</button>
-									<button
-										aria-label="General Knowledge"
-										tabIndex={0}
-										role="menuitem"
-										className="w-max mt-2 category-option min-w-[160px] cursor-pointer block text-left font-semibold"
-										onClick={selectQuestionCategory}>
-										General Knowledge
-										<i className="fas fa-check ml-2 option-check"></i>
-									</button>
+									{questCategories.map((cate: string, index: number) => (
+										<button
+											key={index}
+											aria-label="Agriculture"
+											role="menuitem"
+											tabIndex={0}
+											className="w-max mt-2 category-option min-w-[160px] cursor-pointer block text-left font-semibold"
+											onClick={(e) => selectQuestionCategory(e, setCategory)}>
+											{cate}
+											<i className="fas fa-check ml-2 option-check"></i>
+										</button>
+									))}
 									<div
 										tabIndex={0}
 										onBlur={(e) => optionBlurred("category")}></div>
@@ -209,7 +354,7 @@ const Quizroom = () => {
 										role="menuitem"
 										tabIndex={0}
 										className="w-max mt-2 difficulty-option min-w-[110px] cursor-pointer block text-left font-semibold"
-										onClick={selectQuestionDifficulty}>
+										onClick={(e) => selectQuestionDifficulty(e, setDifficulty)}>
 										Easy <i className="fas fa-check ml-2 option-check"></i>
 									</button>
 									<button
@@ -217,7 +362,7 @@ const Quizroom = () => {
 										tabIndex={0}
 										role="menuitem"
 										className="w-max mt-2 difficulty-option min-w-[110px] cursor-pointer block text-left font-semibold"
-										onClick={selectQuestionDifficulty}>
+										onClick={(e) => selectQuestionDifficulty(e, setDifficulty)}>
 										Medium
 										<i className="fas fa-check ml-2 option-check"></i>
 									</button>
@@ -226,7 +371,7 @@ const Quizroom = () => {
 										tabIndex={0}
 										role="menuitem"
 										className="w-max mt-2 difficulty-option min-w-[110px] cursor-pointer block text-left font-semibold"
-										onClick={selectQuestionDifficulty}>
+										onClick={(e) => selectQuestionDifficulty(e, setDifficulty)}>
 										Hard
 										<i className="fas fa-check ml-2 option-check"></i>
 									</button>
@@ -236,100 +381,125 @@ const Quizroom = () => {
 								</div>
 							</div>
 						</div>
-						<div className="w-[280px] h-[290px] tallXS:h-[360px] tallS:h-[400px] tall:h-[450px] tallL:h-[500px] mobileL:w-[350px] tabM:w-[450px] tabL:w-[500px] laptopS:w-[550px] laptopM:w-[600px] max-w-[600px] bg-[#010029] mt-3 mx-auto rounded-xl overflow-hidden question-monitor grid grid-rows-[auto_1fr_auto] relative">
-							{!questionLoading && !questionInfo ? (
+
+						<div className="w-[90%] h-[290px] tallXS:h-[360px] tallS:h-[400px] tall:h-[450px] tallL:h-[500px] max-w-[700px] bg-[#010029] mt-3 mx-auto rounded-xl overflow-hidden grid grid-rows-[auto_1fr_auto] relative question-monitor">
+							{!questionLoading && !questionInfo && questionsLoaded ? (
 								<div
 									tabIndex={-1}
 									id="question-timer"
-									className=" border-b-[1px] border-b-lime-600 text-lime-600 text-center relative">
+									className=" border-b-[1px] border-b-lime-600 text-lime-600 text-center relative text-[12px] mobileL:text-[14px] mobileXL:text-[16px] tabM:text-[18px] laptopS:text-[20px]">
 									You Have{" "}
 									<span
 										role="timer"
-										className="text-[25px]">
-										0
+										className="text-[17px] mobileL:text-[20px] mobileXL:text-[23px] tabM:text-[26px] laptopS:text-[29px]">
+										{timeLeft}
 									</span>{" "}
 									Seconds Left
 									<p
 										id="question-num"
-										className="border-b-lime-600 text-lime-600 text-[25px] w-max h-max absolute top-0 left-3">
-										1.
+										className="border-b-lime-600 text-lime-600 text-[17px] mobileL:text-[20px] mobileXL:text-[23px] tabM:text-[26px] laptopS:text-[29px] w-max h-max absolute top-0 left-3">
+										{questionNumber}.
 									</p>
 								</div>
 							) : (
 								""
 							)}
-							{!questionLoading && !questionInfo ? (
+							{!questionLoading && !questionInfo && questionsLoaded ? (
 								<div
 									id="question-text-host"
-									className="overflow-y-auto">
+									className="overflow-y-auto !h-full">
 									<p
 										tabIndex={0}
 										role="alert"
 										id="question-text"
-										className="font-specialElite mx-2 text-lime-600 text-[16px]">
-										How many seconds are there in 15 minutes? Lorem ipsum dolor
-										sit amet consectetur adipisicing elit. Ab dolor ipsum
-										eveniet, at repellat delectus nam nisi porro doloremque
-										aliquid numquam tempore, tempora minus praesentium
-										consequuntur officia nostrum quam illo. Animi quasi neque at
-										natus enim facere quae architecto repudiandae!
+										className="font-specialElite mx-2 text-lime-600 text-[12px] mobileL:text-[14px] mobileXL:text-[16px] tabM:text-[18px] laptopS:text-[20px]">
+										{activeQuestion.question}
 									</p>
 								</div>
 							) : (
 								""
 							)}
 
-							{!questionLoading && !questionInfo ? (
+							{!questionLoading && !questionInfo && questionsLoaded ? (
 								<div
 									id="answer-options"
-									className="w-full border-t-[1px] border-t-lime-600 text-lime-600 text-center p-[2px]">
-									<button className="w-[50%] max-w-[45%] inline-block border-[1px] border-lime-600 m-1 bg-correct font-semibold">
-										Twenty Five
-									</button>
-									<button className="w-[50%] max-w-[45%] inline-block  border-[1px] border-lime-600 m-1 bg-wrong font-semibold">
-										Eleven
-									</button>
-									<button className="w-[50%] max-w-[45%] inline-block  border-[1px] border-lime-600 m-1 font-semibold">
-										Manchecter United
-									</button>
-									<button className="w-[50%] max-w-[45%] inline-block  border-[1px] border-lime-600 m-1 font-semibold">
-										Ten
-									</button>
+									className="w-full max-h-[125px] tabS:max-h-[110px] laptopS:max-h-[120px] overflow-y-auto border-t-[1px] border-t-lime-600 text-lime-600 text-center p-[2px]">
+									{questionOptions.map((option, index) => (
+										<button
+											key={index}
+											className="w-[50%] max-w-[45%] inline-block border-[1px] text-[12px] mobileL:text-[14px] laptopS:text-[20px] border-lime-600 m-1 font-semibold"
+											onClick={(e) => selectAnswer(e)}>
+											{option}
+										</button>
+									))}
 								</div>
 							) : (
 								""
 							)}
-							{questionLoading && !questionInfo ? <QuestionSpinner /> : ""}
-							{questionInfo && !questionLoading ? <QuestionInfo /> : ""}
+							{questionLoading && !questionInfo && !questionsLoaded ? (
+								<QuestionSpinner />
+							) : (
+								""
+							)}
+							{questionInfo && !questionLoading && !questionsLoaded ? (
+								<QuestionInfo info={questionInfo} />
+							) : (
+								""
+							)}
 						</div>
 						<div className="flex justify-center items-center">
-							{quizInProgress ? (
-								""
-							) : (
+							{quizInProgress || questionLoading ? (
 								<button
-									type="submit"
-									className="min-w-[120px] min-h-[46px] p-0 mt-3 rounded-lg bg-[#4e4ec2] relative overflow-hidden">
+									className={`min-w-[120px] min-h-[46px] p-0 mt-3 rounded-lg bg-[#4e4ec2] relative overflow-hidden  ${
+										quizInProgress ? "" : "invisible"
+									}`}
+									onClick={(e) => {
+										clearInterval(timeInterval);
+										setTimeLeft(20);
+										NextQuestion(
+											setQuestionNumber,
+											setActiveQuestion,
+											userData,
+											setQuestionInfo,
+											setTimeLeft,
+											setQuestionsLoaded,
+											setQuestionLoading,
+											setQuestionOptions,
+											setQuizInProgress,
+											setTimeInterval,
+										);
+									}}>
 									<div
-										className={`w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[14px]  mobileL:text-[18px] mobileXL:text-[22px] ${
-											quizInProgress ? "invisible" : ""
-										}`}>
-										START
-									</div>
-								</button>
-							)}
-							{quizInProgress ? (
-								<button
-									type="submit"
-									className="min-w-[120px] min-h-[46px] p-0 mt-3 rounded-lg bg-[#4e4ec2] relative overflow-hidden">
-									<div
-										className={`w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[14px]  mobileL:text-[18px] mobileXL:text-[22px] ${
-											quizInProgress ? "invisible" : ""
-										}`}>
+										id="next-btn-child"
+										className="w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[14px]  mobileL:text-[18px] mobileXL:text-[22px]">
 										NEXT
 									</div>
 								</button>
 							) : (
-								""
+								<button
+									className={`min-w-[120px] min-h-[46px] p-0 mt-3 rounded-lg bg-[#4e4ec2] relative overflow-hidden  ${
+										quizInProgress ? "invisible" : ""
+									}`}
+									onClick={async (e) => {
+										startQuiz(
+											setQuestionLoading,
+											setQuestionInfo,
+											setQuestionsLoaded,
+											setQuizInProgress,
+											category,
+											difficulty,
+											setQuestionNumber,
+											setActiveQuestion,
+											setQuestionOptions,
+											setTimeLeft,
+											setTimeInterval,
+											userData,
+										);
+									}}>
+									<div className="w-[95%] bg-primary py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[14px]  mobileL:text-[18px] mobileXL:text-[22px]">
+										START
+									</div>
+								</button>
 							)}
 						</div>
 
@@ -359,62 +529,50 @@ const Quizroom = () => {
 								aria-label="questions category list"
 								tabIndex={-1}
 								className="absolute bottom-0 right-[100%] w-max max-h-[300px] overflow-y-auto bg-yellow-100 rounded-lg border-2 border-slate-700 py-2 px-1  z-20 leaderboard-wrapper">
-								<div
-									aria-label="name"
-									role="menuitem"
-									tabIndex={0}
-									className="w-max mt-2 min-w-[160px] cursor-pointer flex justify-center items-center font-semibold leaderboard-menuitem p-1 m-2">
-									<img
-										src="/avatar-1.png"
-										alt="user image"
-										className="w-[40px] h-[40px] inline mr-3 border-2 border-secondary"
-									/>
-									<div className="inline">
-										<p className=" text-right text-[13px] text-primary font-newRocker">
-											MANofVALOUR
-										</p>
-										<p className=" text-right text-[11px] font-julee text-accent">
-											200
-										</p>
+								{leaderboardData.map((data: any, index: number) => (
+									<div
+										key={index}
+										aria-label="name"
+										role="menuitem"
+										tabIndex={0}
+										className="w-[20px] mt-2 min-w-[160px] cursor-pointer flex justify-start items-center font-semibold leaderboard-menuitem p-1 m-2">
+										<img
+											src={`${data.imgURL}`}
+											alt="user image"
+											className="w-[40px] h-[40px] inline mr-3 border-2 border-secondary"
+										/>
+										<div className="inline">
+											<p className=" text-left text-[13px] text-primary font-newRocker">
+												{data.username}
+											</p>
+											<p className=" text-left text-[11px] font-julee text-accent">
+												{data.gamerank}
+											</p>
+										</div>
 									</div>
-								</div>
-								<div
-									aria-label="name"
-									role="menuitem"
-									tabIndex={0}
-									className="w-max mt-2 min-w-[160px] cursor-pointer flex justify-center items-center font-semibold leaderboard-menuitem p-1 m-2">
-									<img
-										src="/avatar-1.png"
-										alt="user image"
-										className="w-[40px] h-[40px] inline mr-3 border-2 border-secondary"
-									/>
-									<div className="inline">
-										<p className=" text-right text-[13px] text-primary font-newRocker">
-											MANofVALOUR
-										</p>
-										<p className=" text-right text-[11px] font-julee text-accent">
-											200
-										</p>
-									</div>
-								</div>
+								))}
 								<div
 									className="w-0 h-0"
 									tabIndex={0}
 									onBlur={(e) => hideLeaderBoard()}></div>
 							</div>
 						</div>
-						<button
-							id="btn-view-user-profile"
-							aria-label="view user profile"
-							aria-controls="user-profile-modal"
-							className="w-max h-max absolute bottom-1 left-1 p-0"
-							onClick={(e) => viewUserProfile(setShowUserProfile)}>
-							<img
-								src={imgURL ? imgURL : "/placeholder.jpg"}
-								alt="user profile"
-								className="w-[60px] h-[60px] rounded-[50%] object-cover border-2 border-secondary"
-							/>
-						</button>
+						{questionsLoaded ? (
+							""
+						) : (
+							<button
+								id="btn-view-user-profile"
+								aria-label="view user profile"
+								aria-controls="user-profile-modal"
+								className="w-max h-max absolute bottom-1 left-1 p-0"
+								onClick={(e) => viewUserProfile(setShowUserProfile)}>
+								<img
+									src={imgURL ? imgURL : "/placeholder.jpg"}
+									alt="user profile"
+									className="w-[60px] h-[60px] rounded-[50%] object-cover border-2 border-secondary"
+								/>
+							</button>
+						)}
 					</div>
 					{/* user profile modal */}
 					{showUserProfile ? (
@@ -791,31 +949,7 @@ const Quizroom = () => {
 							</button>
 						</div>
 					</div>
-					{/* quizroom Info modal */}
-					<div
-						role="dialog"
-						id="info-modal"
-						className="w-[100vw] h-[100vh] absolute top-0 left-0 z-40 hidden justify-center items-center bg-[#787a7acb] info-modal-cl">
-						<div
-							id="info-modal-wrapper"
-							className="w-[90%] h-[90%] bg-white rounded-md max-w-[400px] relative overflow-hidden flex flex-col items-center justify-center">
-							<p
-								role="alert"
-								id="quizroom-info-modal-title"
-								className="text-center mx-2 font-julee mb-8 text-[25px] font-bold">
-								Congratulations
-							</p>
-							<p
-								role="alert"
-								id="quizroom-info-modal-body"
-								className="text-center mx-2 font-julee">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Mollitia eaque ex dolor autem facilis consequatur voluptate ut,
-								est iste quaerat aspernatur repudiandae quos at. Nulla omnis
-								fuga deserunt illum ratione?
-							</p>
-						</div>
-					</div>
+
 					{/* confirm delete modal */}
 					<div
 						role="dialog"
@@ -876,7 +1010,7 @@ const Quizroom = () => {
 				</div>
 			) : (
 				<div
-					id="login-spinner"
+					id="quizroom-loading-spinner"
 					className="absolute top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center w-full h-full spinner-modal">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -918,6 +1052,42 @@ const Quizroom = () => {
 					</svg>
 				</div>
 			)}
+			{/* quizroom Info modal */}
+			<div
+				role="dialog"
+				id="info-modal"
+				className="w-[100vw] h-[100vh] absolute top-0 left-0 z-40 hidden justify-center items-center bg-[#787a7acb] info-modal-cl">
+				<div
+					id="info-modal-wrapper"
+					className="w-[90%] h-[90%] bg-white rounded-md max-w-[400px] relative overflow-hidden flex flex-col items-center justify-center">
+					<p
+						role="alert"
+						id="quizroom-info-modal-title"
+						className="text-center mx-2 font-julee mb-8 text-[25px] font-bold">
+						Congratulations
+					</p>
+					<p
+						role="alert"
+						id="quizroom-info-modal-body"
+						className="text-center mx-2 font-julee">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia
+						eaque ex dolor autem facilis consequatur voluptate ut, est iste
+						quaerat aspernatur repudiandae quos at. Nulla omnis fuga deserunt
+						illum ratione?
+					</p>
+					<button
+						id="btn-restart"
+						className="min-w-[120px] min-h-[46px] p-0 mt-3 rounded-lg bg-[#58c24e] absolute bottom-2 left-[50%] translate-x-[-50%] overflow-hidden hidden"
+						onClick={(e) => {
+							window.sessionStorage.clear();
+							window.location.reload();
+						}}>
+						<div className="w-[95%] bg-[#208517] py-[2px] m-0 rounded-lg sub-btn-in absolute top-[50%] translate-y-[-52%] left-[50%] translate-x-[-50%] text-center text-white text-[14px]  mobileL:text-[18px] mobileXL:text-[22px]">
+							PLAY AGAIN
+						</div>
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 };
