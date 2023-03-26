@@ -24,9 +24,8 @@ export default function App({ Component, pageProps }: AppProps) {
 					content="a quiz app"
 				/>
 				<link
-					rel="shortcut icon"
+					rel="icon"
 					href="/favicon.ico"
-					type="image/x-icon"
 				/>
 			</Head>
 			<Provider store={reduxStore}>
