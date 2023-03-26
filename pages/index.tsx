@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { actionUpdateDeveloperName } from "@/redux/actionCreators";
 import { useRouter } from "next/router";
+import { appAuth } from "@/firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
 	const devName = useAppSelector((state) => state.appState.devName);
@@ -37,7 +39,21 @@ export default function Home() {
 					// navigate to welcome page after writing developer name
 					if (index == devNameArray.length - 1) {
 						setTimeout(() => {
-							router.push("/welcome");
+							const user = appAuth.currentUser;
+							// if the user is signed in, navigate to quizroom else show login screen
+							if (user) {
+								if (user.emailVerified) {
+									if (user.displayName) {
+										router.push("/quizroom");
+									} else {
+										router.push("/signup_2");
+									}
+								} else {
+									router.push("/request_email_verification");
+								}
+							} else {
+								router.push("/login");
+							}
 						}, 1500);
 					}
 				}, index * 300);

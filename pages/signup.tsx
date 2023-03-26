@@ -82,7 +82,7 @@ const SignIn = () => {
 							id="email-error-signup"
 							className="mt-2 text-red-600 text-[10px] mobileL:text-[14px] mobileXL:text-[17px] w-[80%] hidden mx-auto"></p>
 					</div>
-					<div className=" w-full mt-6">
+					<div className=" w-full mt-3">
 						<label
 							htmlFor="inp-password-signup"
 							className="w-[80%] block text-[16px] mobileL:text-[18px] mobileXL:text-[22px] mx-auto">
@@ -173,7 +173,7 @@ const SignIn = () => {
 					<p
 						role="alert"
 						id="signup-error-console"
-						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-5 rounded-md hidden"></p>
+						className="w-[80%] text-center text-[10px] mobileL:text-[14px] mobileXL:text-[18px] p-2 mt-3 rounded-md hidden"></p>
 					<button
 						type="submit"
 						className=" min-w-[180px] min-h-[46px] p-0 mt-4 rounded-lg bg-[#4e4ec2] relative overflow-hidden">
@@ -186,7 +186,7 @@ const SignIn = () => {
 			<p
 				id="no-acct"
 				tabIndex={0}
-				className="text-[14] mobileL:text-[18px] mobileXL:text-[22px] text-center absolute bottom-12 tallS:bottom-16 laptopS:!bottom-3 invisible short:visible w-max max-h-max left-[50%] translate-x-[-50%]">
+				className="text-[14] mobileL:text-[18px] mobileXL:text-[22px] text-center absolute bottom-6 tallS:bottom-16 laptopS:!bottom-3 invisible short:visible w-max max-h-max left-[50%] translate-x-[-50%]">
 				I have an account...?{" "}
 				<Link
 					href="/login"

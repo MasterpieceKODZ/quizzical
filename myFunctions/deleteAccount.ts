@@ -31,7 +31,7 @@ export async function hideDeleteAcctModal() {
 
 export async function deleteUserAccount() {
 	const passwordInput: any = document.getElementById("del-acct-pw-inp");
-	const password: string = passwordInput.value;
+	const password: string = passwordInput.value.trim();
 
 	if (password) {
 		if (appAuth.currentUser) {

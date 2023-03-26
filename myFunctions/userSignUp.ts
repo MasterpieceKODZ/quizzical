@@ -22,8 +22,8 @@ export default async function createUserAccount() {
 	hideFormInfo("signup");
 	showLoadingSpinner();
 
-	const passwordValue = signUpPassword.value;
-	const emailValue = signUpEmail.value;
+	const passwordValue = signUpPassword.value.trim();
+	const emailValue = signUpEmail.value.trim();
 
 	let emailIsValid: any;
 
@@ -38,7 +38,7 @@ export default async function createUserAccount() {
 	if (emailIsValid) {
 		if (passwordIsValid) {
 			// check is passwords match
-			if (passwordValue == confirmSignUpPassword.value) {
+			if (passwordValue == confirmSignUpPassword.value.trim()) {
 				// create new user account
 				createUserWithEmailAndPassword(appAuth, emailValue, passwordValue)
 					.then((userCredentials: UserCredential) => {

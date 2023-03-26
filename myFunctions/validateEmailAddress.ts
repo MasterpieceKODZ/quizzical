@@ -9,8 +9,9 @@ export async function validateEmailInputed(
 	return new Promise(async (resolve, reject) => {
 		// Abstract email validation API request
 		await fetch(
-			`https://emailvalidation.abstractapi.com/v1/?api_key=729bf559e22346b4b365f92e07e09482&email=${email}`,
+			`https://emailvalidation.abstractapi.com/v1/?api_key=3dca3ac55eb44f36a1b8a1b6f11e34b1&email=${email}`,
 		)
+			//https://emailvalidation.abstractapi.com/v1/?api_key=729bf559e22346b4b365f92e07e09482&email=grail.masterpiece@gmail.com
 			.then(async (res) => {
 				return res.json();
 			})
@@ -53,8 +54,9 @@ export async function validateEmailInputed(
 					resolve({ emailState: "INVALID" });
 				}
 			})
-			.catch((err) => {
+			.catch((err: Error) => {
 				hideLoadingSpinner();
+
 				// show error console
 				showFormInfo(
 					"there was an error while validating email check your network and try again",
@@ -103,7 +105,6 @@ export async function getEmailValidationResponse(
 			emailIsValid = false;
 		}
 	});
-
 	if (emailIsValid) {
 		return new Promise((resolve, reject) => {
 			resolve(true);
