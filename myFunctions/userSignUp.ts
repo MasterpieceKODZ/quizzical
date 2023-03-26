@@ -35,55 +35,68 @@ export default async function createUserAccount() {
 	// check password validity by requirements
 	let passwordIsValid = validatePasswordOnSubmit("signup");
 
-	if (emailIsValid && passwordIsValid) {
-		// check is passwords match
-		if (passwordValue == confirmSignUpPassword.value) {
-			// create new user account
-			createUserWithEmailAndPassword(appAuth, emailValue, passwordValue)
-				.then((userCredentials: UserCredential) => {
-					// verifyy user email address
-					sendEmailVerification(userCredentials.user, {
-						url: "https://quizzical-masterpiecekodz.vercel.app/signup_2",
+	if (emailIsValid) {
+		if (passwordIsValid) {
+			// check is passwords match
+			if (passwordValue == confirmSignUpPassword.value) {
+				// create new user account
+				createUserWithEmailAndPassword(appAuth, emailValue, passwordValue)
+					.then((userCredentials: UserCredential) => {
+						// verifyy user email address
+						sendEmailVerification(userCredentials.user, {
+							url: "https://quizzical-masterpiecekodz.vercel.app/signup_2",
+						});
+						hideLoadingSpinner();
+						showFormInfo(
+							`An email verification link has been sent to ${userCredentials.user.email}, you must verify your email to proceed, click the link in the email to verify your email address`,
+							"signup",
+							"success",
+						);
+					})
+					.catch((err: Error) => {
+						hideLoadingSpinner();
+						hideLoadingSpinner();
+						if (err.message == "Firebase: Error (auth/email-already-in-use).") {
+							showFormInfo(
+								"There is already an account with this email address.",
+								"signup",
+								"error",
+							);
+							// dismiss message after 5 secs
+							setTimeout(() => {
+								hideFormInfo("signup");
+							}, 5000);
+						} else {
+							showFormInfo(
+								"An error occured while trying to create your account, please check your network and try again",
+								"signup",
+								"error",
+							);
+							// dismiss message after 8 secs
+							setTimeout(() => {
+								hideFormInfo("signup");
+							}, 8000);
+						}
 					});
-					hideLoadingSpinner();
-					showFormInfo(
-						`An email verification link has been sent to ${userCredentials.user.email}, you must verify your email to proceed, click the link in the email to verify your email address`,
-						"signup",
-						"success",
-					);
-				})
-				.catch((err: Error) => {
-					hideLoadingSpinner();
-					hideLoadingSpinner();
-					if (err.message == "Firebase: Error (auth/email-already-in-use).") {
-						showFormInfo(
-							"There is already an account with this email address.",
-							"signup",
-							"error",
-						);
-						// dismiss message after 5 secs
-						setTimeout(() => {
-							hideFormInfo("signup");
-						}, 5000);
-					} else {
-						showFormInfo(
-							"An error occured while trying to create your account, please check your network and try again",
-							"signup",
-							"error",
-						);
-						// dismiss message after 8 secs
-						setTimeout(() => {
-							hideFormInfo("signup");
-						}, 8000);
-					}
-				});
+			} else {
+				hideLoadingSpinner();
+				showFormInfo(
+					"passwords do not match, check passwords and try again.",
+					"signup",
+					"error",
+				);
+				setTimeout(() => {
+					hideFormInfo("signup");
+				}, 7000);
+			}
 		} else {
 			hideLoadingSpinner();
 			showFormInfo(
-				"passwords do not match, check passwords and try again.",
+				"Your password does not pass the minimum password requirement,(6 letters, 1 or more numbers and 1 non-alphanumeric character.)",
 				"signup",
 				"error",
 			);
+
 			setTimeout(() => {
 				hideFormInfo("signup");
 			}, 7000);
@@ -91,7 +104,7 @@ export default async function createUserAccount() {
 	} else {
 		hideLoadingSpinner();
 		showFormInfo(
-			"invalid email or password, please check and try again,",
+			"invalid email, please check and try again,",
 			"signup",
 			"error",
 		);
