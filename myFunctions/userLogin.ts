@@ -26,14 +26,14 @@ export default async function loginUserAccount(
 			hideLoadingSpinner();
 			if (err.message == "Firebase: Error (auth/user-not-found).") {
 				showFormInfo(
-					"account does not exist, check email and try again",
+					"account does not exist, check email and try again, or click sign up below to create an account.",
 					"login",
 					"error",
 				);
 
 				setTimeout(() => {
 					hideFormInfo("login");
-				}, 4000);
+				}, 7000);
 			} else if (err.message == "Firebase: Error (auth/wrong-password).") {
 				showFormInfo(
 					"incorrect password, check password and try again, or click forgot password to reset password",

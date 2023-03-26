@@ -20,7 +20,7 @@ export async function hideDisplayNameEditLayout() {
 export async function editUserName() {
 	const usernameInput: any = document.getElementById("inp-new-display-name");
 
-	const username = usernameInput.value;
+	const username = usernameInput.value.trim();
 	const usernameAvail = await isUsernameAvailable(username);
 	if (username) {
 		const usernameReg = new RegExp(/\W/, "gi");

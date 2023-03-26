@@ -17,7 +17,7 @@ export async function resetUserPassword(
 	// set password input type back to password to prevent the form from remebering the input value if user submits the form while password is visible
 	newPassword.type = "password";
 
-	const newPwdVal = newPassword.value;
+	const newPwdVal = newPassword.value.trim();
 
 	if (newPwdVal) {
 		// check validity of new password provided by user
