@@ -17,7 +17,6 @@ export async function startQuiz(
 	setTimeInterval: Dispatch<SetStateAction<number>>,
 	userData: any,
 ) {
-	let timeInterval;
 	if (category && difficulty) {
 		setQuestionLoading(true);
 		setQuestionInfo("");
@@ -36,18 +35,14 @@ export async function startQuiz(
 				"questionList",
 				JSON.stringify(questions) as string,
 			);
-			//current question index on list
+			//persist current question index on list
 			window.sessionStorage.setItem("questionIndex", "0");
-
-			// const questionList = JSON.parse(
-			// 	window.sessionStorage.getItem("questionList") as string,
-			// );
 
 			//persist num of correct answers
 			window.sessionStorage.setItem("numOfCorrectAnswers", "0");
 
 			// show question
-			timeInterval = showQuestion(
+			showQuestion(
 				setQuestionNum,
 				setQuestionLoaded,
 				setQuestionLoading,
@@ -73,8 +68,6 @@ export async function startQuiz(
 		);
 		setQuestionLoaded(false);
 	}
-
-	return timeInterval;
 }
 // present the next question
 export function showQuestion(
@@ -157,7 +150,7 @@ export function showQuestion(
 
 		const timeInSec = Math.floor((finishTimeInMills - dateNow) / 1000);
 
-		if (timeInSec <= 0 && questionIndex != 20) {
+		if (timeInSec <= 0) {
 			clearInterval(timeInterval);
 			NextQuestion(
 				setQuestionNum,
@@ -206,8 +199,6 @@ export function NextQuestion(
 		window.sessionStorage.getItem("questionIndex") as string,
 	);
 
-	let timeInterval: any;
-
 	window.sessionStorage.setItem("optionSelected", "");
 	if (questionIndex == 20) {
 		finishQuiz(
@@ -222,7 +213,7 @@ export function NextQuestion(
 		nextBtn.textContent = "FINISH";
 		// increment question index in session storage
 		window.sessionStorage.setItem("questionIndex", `${questionIndex + 1}`);
-		timeInterval = showQuestion(
+		showQuestion(
 			setQuestionNum,
 			setQuestionLoaded,
 			setQuestionLoading,
@@ -237,7 +228,7 @@ export function NextQuestion(
 	} else {
 		// increment question index in session storage
 		window.sessionStorage.setItem("questionIndex", `${questionIndex + 1}`);
-		timeInterval = showQuestion(
+		showQuestion(
 			setQuestionNum,
 			setQuestionLoaded,
 			setQuestionLoading,
@@ -250,8 +241,6 @@ export function NextQuestion(
 			userData,
 		);
 	}
-
-	return timeInterval;
 }
 
 export function gradeQuiz() {
